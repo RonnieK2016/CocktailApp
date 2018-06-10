@@ -8,8 +8,13 @@ import com.android.volley.toolbox.Volley;
 import com.example.android.popularmoviespart2.BuildConfig;
 import com.example.android.popularmoviespart2.Constants;
 import com.example.android.popularmoviespart2.dao.MoviesAccessService;
+import com.example.android.popularmoviespart2.domain.Movie;
+import com.example.android.popularmoviespart2.domain.Review;
+import com.example.android.popularmoviespart2.domain.Video;
 import com.example.android.popularmoviespart2.listeners.HttpResponseListener;
 import com.example.android.popularmoviespart2.moviedb.MovieDbHttpRequest;
+import com.example.android.popularmoviespart2.moviedb.MovieDbHttpResponse;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,19 +47,44 @@ public class HttpMoviesService implements MoviesAccessService {
         getRequestQueue().add(req);
     }
 
-    private MovieDbHttpRequest buildRequest(int method, String url, HttpResponseListener listener, int currentPage) {
+    private <T> MovieDbHttpRequest buildRequest(int method, String url, HttpResponseListener<T> listener, int currentPage,
+                                                TypeToken<T> typeToken) {
         Map<String, String> params = new HashMap<>();
         params.put(Constants.MOVIE_ACCESS_SERVICE_PAGE, String.valueOf(currentPage));
         params.put(Constants.MOVIE_ACCESS_SERVICE_API_KEY, BuildConfig.MOVIE_DB_API_KEY);
-        return new MovieDbHttpRequest(method, url, params, listener);
-    }
-
-    public void getPopularMovies(HttpResponseListener listener, int currentPage) {
-        addToRequestQueue(buildRequest(Request.Method.POST, Constants.MOVIE_DB_POPULAR_PATH, listener, currentPage));
+        return new MovieDbHttpRequest<T>(method, url, params, listener, typeToken);
     }
 
     @Override
-    public void getTopRatedMovies(HttpResponseListener listener, int currentPage) {
-        addToRequestQueue(buildRequest(Request.Method.POST, Constants.MOVIE_DB_TOP_RATED_PATH, listener, currentPage));
+    public void getPopularMovies(HttpResponseListener<MovieDbHttpResponse<Movie>> listener, int currentPage) {
+        TypeToken<MovieDbHttpResponse<Movie>> movieTypeToken = new TypeToken<MovieDbHttpResponse<Movie>>(){};
+        addToRequestQueue(buildRequest(Request.Method.POST,
+                Constants.MOVIE_DB_POPULAR_PATH, listener, currentPage, movieTypeToken));
+    }
+
+    @Override
+    public void getTopRatedMovies(HttpResponseListener<MovieDbHttpResponse<Movie>> listener, int currentPage) {
+        TypeToken<MovieDbHttpResponse<Movie>> movieTypeToken = new TypeToken<MovieDbHttpResponse<Movie>>(){};
+        addToRequestQueue(buildRequest(Request.Method.POST,
+                Constants.MOVIE_DB_TOP_RATED_PATH, listener, currentPage, movieTypeToken));
+    }
+
+    @Override
+    public void getMovieReviews(HttpResponseListener<MovieDbHttpResponse<Review>> listener, int movieId, int currentPage) {
+        TypeToken<MovieDbHttpResponse<Review>> reviewTypeToken = new TypeToken<MovieDbHttpResponse<Review>>(){};
+        StringBuilder url = new StringBuilder(Constants.MOVIE_DB_BASE_PATH);
+        url.append(movieId);
+        url.append(Constants.MOVIE_DB_REVIEWS_PATH);
+        addToRequestQueue(buildRequest(Request.Method.POST, url.toString(), listener, currentPage, reviewTypeToken));
+    }
+
+    @Override
+    public void getMovieRelatedVideos(HttpResponseListener<MovieDbHttpResponse<Video>> listener, int movieId, int currentPage) {
+        TypeToken<MovieDbHttpResponse<Video>> videoTypeToken = new TypeToken<MovieDbHttpResponse<Video>>(){};
+        StringBuilder url = new StringBuilder(Constants.MOVIE_DB_BASE_PATH);
+        url.append(movieId);
+        url.append(Constants.MOVIE_DB_REVIEWS_PATH);
+        addToRequestQueue(this.<MovieDbHttpResponse<Video>>buildRequest(Request.Method.POST, url.toString(),
+                listener, currentPage, videoTypeToken));
     }
 }

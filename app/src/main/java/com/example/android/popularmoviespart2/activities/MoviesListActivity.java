@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MoviesListActivity extends AppCompatActivity implements HttpResponseListener<MovieDbHttpResponse>,
+public class MoviesListActivity extends AppCompatActivity implements HttpResponseListener<MovieDbHttpResponse<Movie>>,
         MovieAdapterCallback {
 
     private MoviesAdapter mMoviesAdapter;
@@ -139,7 +139,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     }
 
     @Override
-    public void onResponse(MovieDbHttpResponse response) {
+    public void onResponse(MovieDbHttpResponse<Movie> response) {
         hideLoadingIndicator();
 
         if(response == null || CollectionUtils.isEmpty(response.getResults())) {

@@ -15,4 +15,6 @@ public interface JsonConstants {
     String MOVIE_SERVICE_JSON_GENRE_IDS = "genre_ids";
     String MOVIE_SERVICE_JSON_BACKDROP_PATH = "backdrop_path";
     String MOVIE_SERVICE_JSON_RELEASE_DATE = "release_date";
+    String MOVIE_SERVICE_JSON_ISO_639_1 = "iso_639_1";
+    String MOVIE_SERVICE_JSON_ISO_3166_1 = "iso_3166_1";
 }

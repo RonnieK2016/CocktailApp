@@ -13,7 +13,7 @@ import lombok.Setter;
  * Created by angelov on 5/6/2018.
  */
 
-public class MovieDbHttpResponse {
+public class MovieDbHttpResponse<T> {
     @Getter
     @Setter
     private Integer page;
@@ -27,5 +27,5 @@ public class MovieDbHttpResponse {
     private Integer totalResults;
     @Getter
     @Setter
-    private List<Movie> results;
+    private List<T> results;
 }

@@ -10,6 +10,8 @@ public interface Constants {
     String MOVIE_DB_BASE_PATH = "http://api.themoviedb.org/3/movie/";
     String MOVIE_DB_POPULAR_PATH = MOVIE_DB_BASE_PATH + "popular";
     String MOVIE_DB_TOP_RATED_PATH = MOVIE_DB_BASE_PATH + "top_rated";
+    String MOVIE_DB_REVIEWS_PATH = "/reviews";
+    String MOVIE_DB_VIDEOS_PATH = "/videos";
     String MOVIE_ACCESS_SERVICE_API_KEY = "api_key";
     String MOVIE_ACCESS_SERVICE_PAGE = "page";
 }

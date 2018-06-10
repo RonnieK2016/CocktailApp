@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -26,12 +27,15 @@ public class MovieDbHttpRequest<T> extends Request<T> {
 
     private static final String TAG = MovieDbHttpRequest.class.getSimpleName();
     private Map<String, String> mParams;
-    private HttpResponseListener<T> mListener;
+    private HttpResponseListener mListener;
+    private Type type;
+    private GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public MovieDbHttpRequest(int method, String url, Map<String, String> params, HttpResponseListener<T> listener) {
+    public MovieDbHttpRequest(int method, String url, Map<String, String> params, HttpResponseListener listener, TypeToken<T> typeToken) {
         super(method, url, listener);
         this.mParams = params;
         this.mListener = listener;
+        this.type = typeToken.getType();
 
         setRetryPolicy(new DefaultRetryPolicy(5000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         setShouldCache(false);
@@ -47,10 +51,9 @@ public class MovieDbHttpRequest<T> extends Request<T> {
         try {
             String jsonResponse = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers));
-            GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
             Gson gSonParser = gsonBuilder.create();
-            T parsedJsonResponse = gSonParser.fromJson(jsonResponse, new TypeToken<MovieDbHttpResponse>() {
-            }.getType());
+
+            T parsedJsonResponse = gSonParser.fromJson(jsonResponse, type);
 
             return Response.success(parsedJsonResponse, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
