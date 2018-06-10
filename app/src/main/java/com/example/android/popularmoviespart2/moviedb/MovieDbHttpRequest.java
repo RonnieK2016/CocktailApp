@@ -19,19 +19,16 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-/**
- * Created by angelov on 5/6/2018.
- */
 
 public class MovieDbHttpRequest<T> extends Request<T> {
 
     private static final String TAG = MovieDbHttpRequest.class.getSimpleName();
     private Map<String, String> mParams;
-    private HttpResponseListener mListener;
+    private HttpResponseListener<T> mListener;
     private Type type;
     private GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public MovieDbHttpRequest(int method, String url, Map<String, String> params, HttpResponseListener listener, TypeToken<T> typeToken) {
+    public MovieDbHttpRequest(int method, String url, Map<String, String> params, HttpResponseListener<T> listener, TypeToken<T> typeToken) {
         super(method, url, listener);
         this.mParams = params;
         this.mListener = listener;
