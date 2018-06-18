@@ -82,9 +82,9 @@ public class HttpMoviesService implements MoviesAccessService {
     public void getMovieRelatedVideos(HttpResponseListener<MovieDbHttpResponse<Video>> listener, int movieId, int currentPage) {
         TypeToken<MovieDbHttpResponse<Video>> videoTypeToken = new TypeToken<MovieDbHttpResponse<Video>>(){};
         StringBuilder url = new StringBuilder(Constants.MOVIE_DB_BASE_PATH);
-        url.append(movieId);
-        url.append(Constants.MOVIE_DB_REVIEWS_PATH);
-        addToRequestQueue(this.<MovieDbHttpResponse<Video>>buildRequest(Request.Method.POST, url.toString(),
+        url.append(movieId).append(Constants.MOVIE_DB_VIDEOS_PATH).append("?").
+                append(Constants.MOVIE_ACCESS_SERVICE_API_KEY).append("=").append(BuildConfig.MOVIE_DB_API_KEY);
+        addToRequestQueue(this.<MovieDbHttpResponse<Video>>buildRequest(Request.Method.GET, url.toString(),
                 listener, currentPage, videoTypeToken));
     }
 }

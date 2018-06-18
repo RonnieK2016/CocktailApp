@@ -30,6 +30,7 @@ import com.example.android.popularmoviespart2.listeners.MovieAdapterCallback;
 import com.example.android.popularmoviespart2.listeners.MoviesRecyclerViewScrollListener;
 import com.example.android.popularmoviespart2.moviedb.MovieDbHttpResponse;
 import com.example.android.popularmoviespart2.utils.NetworkUtils;
+import com.example.android.popularmoviespart2.utils.ViewUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -39,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesListActivity extends AppCompatActivity implements HttpResponseListener<MovieDbHttpResponse<Movie>>,
-        MovieAdapterCallback {
+        MovieAdapterCallback<Movie> {
 
     private MoviesAdapter mMoviesAdapter;
     @BindView(R.id.rv_movies)
@@ -101,20 +102,12 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
             }
         }
         else {
-            Snackbar snackbar = Snackbar
-                    .make(mMainLayout, R.string.no_internet_connect, Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            loadMovies(sort, 1);
-                        }
-                    });
-            snackbar.setActionTextColor(Color.RED);
-
-            View snackbarView = snackbar.getView();
-            TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.YELLOW);
-            snackbar.show();
+            ViewUtils.showNoInternetConnectionSnackBar(mMainLayout, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    loadMovies(sort, 1);
+                }
+            });
         }
     }
 
@@ -127,7 +120,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     }
 
     @Override
-    public void onMovieClick(Movie movie) {
+    public void onClick(Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
         intent.putExtra(Constants.MOVIE_DETAIL_INTENT_TAG, movie);
         startActivity(intent);

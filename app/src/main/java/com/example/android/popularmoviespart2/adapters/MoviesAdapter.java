@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private MovieAdapterCallback mCallbacks;
+    private MovieAdapterCallback<Movie> mCallbacks;
     private Context mContext;
     private List<Movie> mMovies;
 
@@ -50,9 +50,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             movieViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if(mCallbacks!=null) {
-                        mCallbacks.onMovieClick(selectedMovie);
+                        mCallbacks.onClick(selectedMovie);
                     }
                 }
             });
@@ -73,7 +72,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return (mMovies !=null? mMovies.size():0);
     }
 
-    public void setCallbacks(MovieAdapterCallback callbacks) {
+    public void setCallbacks(MovieAdapterCallback<Movie> callbacks) {
         this.mCallbacks = callbacks;
     }
 

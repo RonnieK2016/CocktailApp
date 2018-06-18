@@ -14,4 +14,8 @@ public interface Constants {
     String MOVIE_DB_VIDEOS_PATH = "/videos";
     String MOVIE_ACCESS_SERVICE_API_KEY = "api_key";
     String MOVIE_ACCESS_SERVICE_PAGE = "page";
+    String YOUTUBE_VIDEO_IMAGE_BASE_PATH = "http://img.youtube.com/vi/";
+    String YOUTUBE_VIDEO_IMAGE_URL_END_PATH = "/0.jpg";
+    String YOUTUBE_VIDEO_WATCH_BASE_PATH = "http://www.youtube.com/watch?v=";
+    String YOUTUBE_VIDEO_APPLICATION_PATH = "vnd.youtube:";
 }
