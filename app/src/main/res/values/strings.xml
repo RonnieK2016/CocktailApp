@@ -3,6 +3,7 @@
     <string name="no_internet_connect">No Internet Connection</string>
     <string name="movie_title">Movie Title</string>
     <string name="release_date">Release Date</string>
+    <string name="reviews">Reviews</string>
     <string name="rating">Rating</string>
     <string name="overview">Overview</string>
     <string name="action_sort">Sort</string>
