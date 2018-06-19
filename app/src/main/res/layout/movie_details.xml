@@ -37,10 +37,23 @@
             android:layout_height="3dp"
             android:background="@color/colorDividerLight"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_videos"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_videos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ProgressBar
+                android:id="@+id/pb_video_loading_indicator"
+                android:layout_height="42dp"
+                android:layout_width="42dp"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -147,17 +160,6 @@
                 android:textColor="@color/secondaryText"/>
 
         </LinearLayout>
-
-
-        <ProgressBar
-            android:id="@+id/pb_video_loading_indicator"
-            android:layout_height="42dp"
-            android:layout_width="42dp"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:visibility="invisible" />
-
 
     </LinearLayout>
     
