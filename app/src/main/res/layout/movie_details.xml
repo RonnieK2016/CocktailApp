@@ -166,7 +166,14 @@
             android:layout_height="3dp"
             android:background="@color/colorDividerLight"/>
 
-        <include layout="@layout/movie_reviews_layout" />
+        <ImageView
+            android:id="@+id/movie_reviews_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/movie_reviews_link"
+            android:src="@drawable/ic_reviews"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true" />
 
     </LinearLayout>
     

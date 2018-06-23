@@ -4,6 +4,7 @@
     <string name="movie_title">Movie Title</string>
     <string name="release_date">Release Date</string>
     <string name="reviews">Reviews</string>
+    <string name="author">Author</string>
     <string name="rating">Rating</string>
     <string name="overview">Overview</string>
     <string name="action_sort">Sort</string>
@@ -13,4 +14,5 @@
     <string name="movie_poster_small">Small Movie Poster</string>
     <string name="movie_video_small">Small Movie Video</string>
     <string name="movie_video_title">Movie Video Title</string>
+    <string name="movie_reviews_link">Movie Reviews Link</string>
 </resources>

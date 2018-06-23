@@ -1,6 +1,7 @@
 package com.example.android.popularmoviespart2.listeners;
 
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 /**
@@ -8,10 +9,14 @@ import android.support.v7.widget.RecyclerView;
  */
 public abstract class MoviesRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     private int currentPage = 1;
-    private GridLayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
     private boolean isLoading = false;
     private int previousTotal = 0;
     private int numberOfVisibleItems = 5;
+
+    public MoviesRecyclerViewScrollListener(LinearLayoutManager layoutManager) {
+        this.layoutManager = layoutManager;
+    }
 
     public MoviesRecyclerViewScrollListener(GridLayoutManager layoutManager) {
         this.layoutManager = layoutManager;
@@ -24,7 +29,15 @@ public abstract class MoviesRecyclerViewScrollListener extends RecyclerView.OnSc
 
         int visibleItemCount = layoutManager.getChildCount();
         int totalItemCount = layoutManager.getItemCount();
-        int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+        int firstVisibleItemPosition = 1;
+
+        if(layoutManager instanceof GridLayoutManager) {
+            firstVisibleItemPosition = ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
+        }
+        else if (layoutManager instanceof LinearLayoutManager) {
+            firstVisibleItemPosition = ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
+        }
 
         if (isLoading) {
             if (totalItemCount > previousTotal) {

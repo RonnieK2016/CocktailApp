@@ -23,6 +23,7 @@ import com.example.android.popularmoviespart2.adapters.VideosAdapter;
 import com.example.android.popularmoviespart2.dao.MoviesAccessFactory;
 import com.example.android.popularmoviespart2.dao.MoviesAccessService;
 import com.example.android.popularmoviespart2.domain.Movie;
+import com.example.android.popularmoviespart2.domain.Review;
 import com.example.android.popularmoviespart2.domain.SortOptions;
 import com.example.android.popularmoviespart2.domain.Video;
 import com.example.android.popularmoviespart2.listeners.HttpResponseListener;
@@ -37,7 +38,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieDetailActivity extends AppCompatActivity implements MovieAdapterCallback<Video>, HttpResponseListener<MovieDbHttpResponse<Video>> {
+public class MovieDetailActivity extends AppCompatActivity implements MovieAdapterCallback<Video>,
+        HttpResponseListener<MovieDbHttpResponse<Video>>{
 
     @BindView(R.id.movie_title)
     TextView movieTitle;
