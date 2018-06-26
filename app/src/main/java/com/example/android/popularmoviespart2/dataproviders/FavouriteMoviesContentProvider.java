@@ -1,6 +1,7 @@
 package com.example.android.popularmoviespart2.dataproviders;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -26,15 +27,7 @@ public class FavouriteMoviesContentProvider extends ContentProvider {
 
 
     public static UriMatcher buildUriMatcher() {
-
-        // Initialize a UriMatcher with no matches by passing in NO_MATCH to the constructor
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-        /*
-          All paths added to the UriMatcher have a corresponding int.
-          For each kind of uri you may want to access, add the corresponding match with addURI.
-          The two calls below add matches for the task directory and a single item by ID.
-         */
         uriMatcher.addURI(FavouriteMoviesDbContract.CONTENT_AUTHORITY, FavouriteMoviesDbContract.PATH_FAVOURITE_MOVIES, MOVIE);
         uriMatcher.addURI(FavouriteMoviesDbContract.CONTENT_AUTHORITY, FavouriteMoviesDbContract.PATH_FAVOURITE_MOVIES
                 + "/#", MOVIE_WITH_ID);
@@ -52,10 +45,40 @@ public class FavouriteMoviesContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-
         SQLiteDatabase favouriteMoviesDb = favouriteMoviesDbHelper.getReadableDatabase();
 
-        return null;
+        Cursor resultCursor;
+        switch(sUriMatcher.match(uri)){
+            case MOVIE:{
+                resultCursor = favouriteMoviesDb.query(
+                        MovieRecord.FAVOURITE_MOVIES_TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            }
+            case MOVIE_WITH_ID:{
+                resultCursor = favouriteMoviesDb.query(
+                        MovieRecord.FAVOURITE_MOVIES_TABLE_NAME,
+                        projection,
+                        MovieRecord.DB_ID + " = ?",
+                        new String[] {String.valueOf(ContentUris.parseId(uri))},
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            }
+            default:{
+                // By default, we assume a bad URI
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+            }
+        }
+
+
+        return resultCursor;
     }
 
     @Nullable
@@ -79,14 +102,52 @@ public class FavouriteMoviesContentProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         SQLiteDatabase favouriteMoviesDb = favouriteMoviesDbHelper.getWritableDatabase();
 
-        return null;
+        Uri returnUri;
+        switch (sUriMatcher.match(uri)) {
+            case MOVIE: {
+                long id = favouriteMoviesDb.insert(MovieRecord.FAVOURITE_MOVIES_TABLE_NAME, null, values);
+                // insert unless it is already contained in the database
+                if (id > 0) {
+                    returnUri = MovieRecord.buildUri(id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert record: " + uri);
+                }
+                break;
+            }
+
+            default: {
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+            }
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return returnUri;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase favouriteMoviesDb = favouriteMoviesDbHelper.getWritableDatabase();
+        int deletedRecords;
+        switch(sUriMatcher.match(uri)){
+            case MOVIE:
+                deletedRecords = favouriteMoviesDb.delete(
+                        MovieRecord.FAVOURITE_MOVIES_TABLE_NAME, selection, selectionArgs);
+                // reset sequence
+                favouriteMoviesDb.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '"
+                        + MovieRecord.FAVOURITE_MOVIES_TABLE_NAME + "'");
+                break;
+            case MOVIE_WITH_ID:
+                deletedRecords = favouriteMoviesDb.delete(MovieRecord.FAVOURITE_MOVIES_TABLE_NAME,
+                        MovieRecord.ID + " = ?",
+                        new String[]{String.valueOf(ContentUris.parseId(uri))});
 
-        return 0;
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        return deletedRecords;
     }
 
     @Override

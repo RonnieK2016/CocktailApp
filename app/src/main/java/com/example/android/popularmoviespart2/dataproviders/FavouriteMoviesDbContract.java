@@ -17,6 +17,16 @@ public class FavouriteMoviesDbContract {
 
     public static final String PATH_FAVOURITE_MOVIES = "favourite_movies";
 
+    public static final String[] FAVOURITE_MOVIES_COLUMNS = new String[] {
+            MovieRecord.ID,
+            MovieRecord.DB_ID,
+            MovieRecord.TITLE,
+            MovieRecord.POSTER_PATH,
+            MovieRecord.VOTE_AVERAGE,
+            MovieRecord.OVERVIEW,
+            MovieRecord.RELEASE_DATE
+    };
+
     public static final class MovieRecord implements BaseColumns {
 
         // table name
@@ -29,7 +39,7 @@ public class FavouriteMoviesDbContract {
         public static final String POSTER_PATH = "POSTER_PATH";
         public static final String VOTE_AVERAGE = "VOTE_AVERAGE";
         public static final String OVERVIEW = "OVERVIEW";
-        public static final String MOVIE_RELEASE_DATE = "RELEASE_DATE";
+        public static final String RELEASE_DATE = "RELEASE_DATE";
 
         // create content uri
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(FAVOURITE_MOVIES_TABLE_NAME).build();
@@ -42,7 +52,6 @@ public class FavouriteMoviesDbContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE +"/" + CONTENT_AUTHORITY + "/" + FAVOURITE_MOVIES_TABLE_NAME;
 
-        // for building URIs on insertion
         public static Uri buildUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }

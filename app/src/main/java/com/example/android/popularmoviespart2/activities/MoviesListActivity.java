@@ -1,9 +1,11 @@
 package com.example.android.popularmoviespart2.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.example.android.popularmoviespart2.Constants;
@@ -23,6 +24,8 @@ import com.example.android.popularmoviespart2.R;
 import com.example.android.popularmoviespart2.adapters.MoviesAdapter;
 import com.example.android.popularmoviespart2.dao.MoviesAccessFactory;
 import com.example.android.popularmoviespart2.dao.MoviesAccessService;
+import com.example.android.popularmoviespart2.dataproviders.FavouriteMoviesDbContract;
+import com.example.android.popularmoviespart2.dataproviders.FavouriteMoviesDbContract.MovieRecord;
 import com.example.android.popularmoviespart2.domain.Movie;
 import com.example.android.popularmoviespart2.domain.SortOptions;
 import com.example.android.popularmoviespart2.listeners.HttpResponseListener;
@@ -35,12 +38,13 @@ import com.example.android.popularmoviespart2.utils.ViewUtils;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesListActivity extends AppCompatActivity implements HttpResponseListener<MovieDbHttpResponse<Movie>>,
-        MovieAdapterCallback<Movie> {
+        MovieAdapterCallback<Movie>, LoaderManager.LoaderCallbacks<Cursor>  {
 
     private MoviesAdapter mMoviesAdapter;
     @BindView(R.id.rv_movies)
@@ -57,6 +61,8 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     private boolean sortOptionChanged = false;
     private static final String SELECTED_SEARCH_TAG = "SELECTED_SEARCH_TAG";
     private MoviesRecyclerViewScrollListener onScrollListener;
+    private static final int FAVOURITE_MOVIES_LOADER_ID = 0;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,21 +99,26 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     }
 
     private void loadMovies(final SortOptions sort, int currentPage) {
-        if(NetworkUtils.isConnectionAvailable(this)) {
+        if(SortOptions.FAVOURITE == sort){
             showLoadingIndicator();
-            if(sort == SortOptions.POPULAR) {
-                moviesAccessService.getPopularMovies(this, currentPage);
-            } else {
-                moviesAccessService.getTopRatedMovies(this, currentPage);
-            }
+            getSupportLoaderManager().initLoader(FAVOURITE_MOVIES_LOADER_ID, null, this);
         }
         else {
-            ViewUtils.showNoInternetConnectionSnackBar(mMainLayout, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    loadMovies(sort, 1);
+            if (NetworkUtils.isConnectionAvailable(this)) {
+                showLoadingIndicator();
+                if (sort == SortOptions.POPULAR) {
+                    moviesAccessService.getPopularMovies(this, currentPage);
+                } else {
+                    moviesAccessService.getTopRatedMovies(this, currentPage);
                 }
-            });
+            } else {
+                ViewUtils.showNoInternetConnectionSnackBar(mMainLayout, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadMovies(sort, 1);
+                    }
+                });
+            }
         }
     }
 
@@ -162,6 +173,8 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
                 break;
             case POPULAR:
                 menu.findItem(R.id.sort_by_popularity).setChecked(true);
+            case FAVOURITE:
+                menu.findItem(R.id.favourite_movies).setChecked(true);
         }
         return true;
     }
@@ -179,6 +192,9 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
                     break;
                 case R.id.sort_by_top_rated:
                     sortMoviesBySelection(SortOptions.TOP_RATED);
+                    break;
+                case R.id.favourite_movies:
+                    sortMoviesBySelection(SortOptions.FAVOURITE);
                     break;
             }
         }
@@ -204,4 +220,56 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
+        if (id == FAVOURITE_MOVIES_LOADER_ID) {
+            return new CursorLoader(this,
+                    MovieRecord.CONTENT_URI,
+                    FavouriteMoviesDbContract.FAVOURITE_MOVIES_COLUMNS,
+                    null,
+                    null,
+                    MovieRecord.ID);
+        }
+        else {
+            throw new RuntimeException("Not implemented for id " + id);
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        hideLoadingIndicator();
+        if(data.getCount() > 0) {
+            populateDataFromCursor(data);
+        }
+    }
+
+    private void populateDataFromCursor(Cursor data) {
+        List<Movie> resultList = new ArrayList<>();
+
+        if(data.moveToFirst()) {
+            do {
+                int databaseId = data.getInt(data.getColumnIndex(MovieRecord.ID));
+                int movieId = data.getInt(data.getColumnIndex(MovieRecord.DB_ID));
+                String title = data.getString(data.getColumnIndex(MovieRecord.TITLE));
+                String posterPath = data.getString(data.getColumnIndex(MovieRecord.POSTER_PATH));
+                double voteAverage = data.getDouble(data.getColumnIndex(MovieRecord.VOTE_AVERAGE));
+                String overview = data.getString(data.getColumnIndex(MovieRecord.OVERVIEW));
+                String releaseData = data.getString(data.getColumnIndex(MovieRecord.RELEASE_DATE));
+                resultList.add(new Movie(movieId, databaseId, title, posterPath, voteAverage, overview, releaseData));
+            }
+            while (data.moveToNext());
+        }
+        mMoviesAdapter.clearMovies();
+        mMoviesAdapter.addMovies(resultList);
+        mMoviesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMoviesAdapter.clearMovies();
+        mMoviesAdapter.notifyDataSetChanged();
+    }
+
 }

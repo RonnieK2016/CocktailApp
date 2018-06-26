@@ -21,6 +21,9 @@ public class Movie implements Parcelable {
     private int id;
     @Getter
     @Setter
+    private int databaseId;
+    @Getter
+    @Setter
     private boolean video;
     @Getter
     @Setter
@@ -78,6 +81,17 @@ public class Movie implements Parcelable {
             return new Object[0];
         }
     };
+
+    public Movie(int id, int databaseId, String title, String posterPath, double voteAverage,
+                 String overview, String releaseDate){
+        this.id = id;
+        this.databaseId = databaseId;
+        this.title = title;
+        this.posterPath = posterPath;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+    }
 
     private Movie(Parcel source) {
         id = source.readInt();

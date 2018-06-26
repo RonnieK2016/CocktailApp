@@ -6,7 +6,8 @@ package com.example.android.popularmoviespart2.domain;
 
 public enum SortOptions {
     POPULAR("popular"),
-    TOP_RATED("top_rated");
+    TOP_RATED("top_rated"),
+    FAVOURITE("favourite");
 
     private final String value;
 

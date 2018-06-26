@@ -30,7 +30,7 @@ public class FavouriteMoviesDbHelper extends SQLiteOpenHelper {
                 MovieRecord.POSTER_PATH         + " TEXT, " +
                 MovieRecord.VOTE_AVERAGE        + " REAL NOT NULL, " +
                 MovieRecord.OVERVIEW            + " TEXT NOT NULL, " +
-                MovieRecord.MOVIE_RELEASE_DATE  + " TEXT NOT NULL);";
+                MovieRecord.RELEASE_DATE + " TEXT NOT NULL);";
 
         db.execSQL(CREATE_TABLE);
 
