@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">Popular Movies (part1)</string>
+    <string name="app_name">Popular Movies (part2)</string>
     <string name="no_internet_connect">No Internet Connection</string>
     <string name="movie_title">Movie Title</string>
     <string name="release_date">Release Date</string>
     <string name="reviews">Reviews</string>
     <string name="author">Author</string>
+    <string name="description">Description</string>
     <string name="rating">Rating</string>
     <string name="overview">Overview</string>
     <string name="action_sort">Sort</string>
@@ -14,5 +15,5 @@
     <string name="movie_poster_small">Small Movie Poster</string>
     <string name="movie_video_small">Small Movie Video</string>
     <string name="movie_video_title">Movie Video Title</string>
-    <string name="movie_reviews_link">Movie Reviews Link</string>
+    <string name="movie_reviews_button">See reviews -></string>
 </resources>

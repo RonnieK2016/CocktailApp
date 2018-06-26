@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ import butterknife.ButterKnife;
 public class MovieDetailActivity extends AppCompatActivity implements MovieAdapterCallback<Video>,
         HttpResponseListener<MovieDbHttpResponse<Video>>{
 
+    public static final String SAVED_MOVIE_TAG = "SAVED_MOVIE_TAG";
     @BindView(R.id.movie_title)
     TextView movieTitle;
     @BindView(R.id.movie_poster_details)
@@ -62,13 +65,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieAdapt
     @BindView(R.id.rv_videos)
     RecyclerView mVideosRecyclerView;
     private MoviesAccessService moviesAccessService;
+    private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details);
         ButterKnife.bind(this);
-        Movie movie = readMovieFromIntent();
+        movie = readMovieFromIntent();
         moviesAccessService = MoviesAccessFactory.getMoviesService(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
@@ -128,6 +132,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieAdapt
         }
     }
 
+    public void openReviewsButton(View item) {
+        Intent intent = new Intent(this, ReviewsActivity.class);
+        intent.putExtra(Constants.MOVIE_DETAIL_INTENT_TAG, movie);
+        startActivity(intent);
+    }
+
     @Override
     public void onClick(Video item) {
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.YOUTUBE_VIDEO_APPLICATION_PATH + item.getKey()));
@@ -156,5 +166,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieAdapt
         mVideosAdapter  = new VideosAdapter(response.getResults());
         mVideosAdapter.setCallbacks(this);
         mVideosRecyclerView.setAdapter(mVideosAdapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(SAVED_MOVIE_TAG, movie);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Object savedMovie = savedInstanceState.getParcelable(SAVED_MOVIE_TAG);
+        if(savedMovie != null) {
+            movie = (Movie) savedMovie;
+        }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

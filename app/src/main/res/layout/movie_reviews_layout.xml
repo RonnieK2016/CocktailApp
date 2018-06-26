@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:id="@+id/movie_details_review_layout"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
@@ -14,7 +12,8 @@
         android:paddingBottom="5dp"
         android:text="@string/reviews"
         android:textSize="18sp"
-        android:textColor="@color/primaryText"/>
+        android:textColor="@color/primaryText"
+        android:id="@+id/textView" />
 
     <View
         android:layout_width="20dp"
@@ -22,9 +21,11 @@
         android:background="@color/colorPrimary"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_movie_details_reviews"
+        android:id="@+id/rv_reviews"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView" />
 
     <ProgressBar
         android:id="@+id/pb_reviews_loading_indicator"
@@ -33,4 +34,4 @@
         android:layout_gravity="center"
         android:visibility="invisible" />
 
-</LinearLayout>
+</RelativeLayout>

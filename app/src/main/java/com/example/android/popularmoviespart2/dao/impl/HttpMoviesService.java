@@ -73,9 +73,9 @@ public class HttpMoviesService implements MoviesAccessService {
     public void getMovieReviews(HttpResponseListener<MovieDbHttpResponse<Review>> listener, int movieId, int currentPage) {
         TypeToken<MovieDbHttpResponse<Review>> reviewTypeToken = new TypeToken<MovieDbHttpResponse<Review>>(){};
         StringBuilder url = new StringBuilder(Constants.MOVIE_DB_BASE_PATH);
-        url.append(movieId);
-        url.append(Constants.MOVIE_DB_REVIEWS_PATH);
-        addToRequestQueue(buildRequest(Request.Method.POST, url.toString(), listener, currentPage, reviewTypeToken));
+        url.append(movieId).append(Constants.MOVIE_DB_REVIEWS_PATH).append("?").
+                append(Constants.MOVIE_ACCESS_SERVICE_API_KEY).append("=").append(BuildConfig.MOVIE_DB_API_KEY);
+        addToRequestQueue(buildRequest(Request.Method.GET, url.toString(), listener, currentPage, reviewTypeToken));
     }
 
     @Override

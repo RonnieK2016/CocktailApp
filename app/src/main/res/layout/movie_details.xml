@@ -166,14 +166,13 @@
             android:layout_height="3dp"
             android:background="@color/colorDividerLight"/>
 
-        <ImageView
-            android:id="@+id/movie_reviews_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/movie_reviews_link"
-            android:src="@drawable/ic_reviews"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:id="@+id/reviews_button"
+            android:onClick="openReviewsButton"
+            android:text="@string/movie_reviews_button"
+            />
 
     </LinearLayout>
     

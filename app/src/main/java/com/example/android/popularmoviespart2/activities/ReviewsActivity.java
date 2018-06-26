@@ -2,14 +2,18 @@ package com.example.android.popularmoviespart2.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
 import com.example.android.popularmoviespart2.Constants;
@@ -39,10 +43,10 @@ import butterknife.ButterKnife;
 public class ReviewsActivity extends AppCompatActivity implements HttpResponseListener<MovieDbHttpResponse<Review>> {
 
     @BindView(R.id.movie_details_review_layout)
-    LinearLayout mMainMovieDetailLayout;
+    RelativeLayout mMainMovieDetailLayout;
     @BindView(R.id.pb_reviews_loading_indicator)
     ProgressBar mLoadingIndicator;
-    @BindView(R.id.rv_videos)
+    @BindView(R.id.rv_reviews)
     RecyclerView mReviewsRv;
     private MoviesAccessService moviesAccessService;
     private MoviesRecyclerViewScrollListener onScrollListener;
@@ -60,8 +64,10 @@ public class ReviewsActivity extends AppCompatActivity implements HttpResponseLi
         moviesAccessService = MoviesAccessFactory.getMoviesService(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager.VERTICAL, false);
         mReviewsRv.setLayoutManager(linearLayoutManager);
+
+        initAdapter();
 
         onScrollListener = new MoviesRecyclerViewScrollListener(linearLayoutManager){
 
@@ -74,6 +80,12 @@ public class ReviewsActivity extends AppCompatActivity implements HttpResponseLi
         };
 
         mReviewsRv.addOnScrollListener(onScrollListener);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        loadReviews(movieId, 1);
     }
 
     private Integer readMovieIdFromIntent() {
@@ -89,6 +101,8 @@ public class ReviewsActivity extends AppCompatActivity implements HttpResponseLi
         }
         return null;
     }
+
+
 
     private void showLoadingIndicator(){
         mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -112,6 +126,18 @@ public class ReviewsActivity extends AppCompatActivity implements HttpResponseLi
             });
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void initAdapter() {
         mReviewsAdapter = new ReviewsAdapter(new ArrayList<Review>());
