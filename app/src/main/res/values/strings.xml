@@ -16,4 +16,5 @@
     <string name="movie_video_small">Small Movie Video</string>
     <string name="movie_video_title">Movie Video Title</string>
     <string name="movie_reviews_button">See reviews -></string>
+    <string name="content_authority">com.example.android.popularmoviespart2</string>
 </resources>
