@@ -173,6 +173,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
                 break;
             case POPULAR:
                 menu.findItem(R.id.sort_by_popularity).setChecked(true);
+                break;
             case FAVOURITE:
                 menu.findItem(R.id.favourite_movies).setChecked(true);
         }
