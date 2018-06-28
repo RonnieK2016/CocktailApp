@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.example.android.popularmoviespart2.Constants;
@@ -36,9 +37,12 @@ import com.example.android.popularmoviespart2.utils.NetworkUtils;
 import com.example.android.popularmoviespart2.utils.ViewUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.transform.Templates;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +53,8 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     private MoviesAdapter mMoviesAdapter;
     @BindView(R.id.rv_movies)
     public RecyclerView mMoviesListRv;
+    @BindView(R.id.no_favourite_movies)
+    TextView mNoFavouriteMoviesTextView;
     @BindView(R.id.pb_loading_indicator)
     public ProgressBar mLoadingIndicator;
     @BindView(R.id.activity_movies_list)
@@ -105,6 +111,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
         }
         else {
             if (NetworkUtils.isConnectionAvailable(this)) {
+                showHideFavourites(true);
                 showLoadingIndicator();
                 if (sort == SortOptions.POPULAR) {
                     moviesAccessService.getPopularMovies(this, currentPage);
@@ -241,6 +248,9 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         hideLoadingIndicator();
+
+        showHideFavourites(data.getCount() > 0);
+
         if(data.getCount() > 0) {
             populateDataFromCursor(data);
         }
@@ -271,6 +281,11 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     public void onLoaderReset(Loader<Cursor> loader) {
         mMoviesAdapter.clearMovies();
         mMoviesAdapter.notifyDataSetChanged();
+    }
+
+    private void showHideFavourites(boolean show) {
+        mMoviesListRv.setVisibility(show ? View.VISIBLE : View.GONE);
+        mNoFavouriteMoviesTextView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
 }

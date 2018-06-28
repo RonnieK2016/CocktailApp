@@ -12,6 +12,7 @@
     <string name="sort_by_popularity">By Popularity</string>
     <string name="sort_by_top_rated">By Top Rated</string>
     <string name="favourite_movies">Favourite Movies</string>
+    <string name="no_favourite_movies_available">You don\'t have any favourite movies yet</string>
     <string name="movie_poster_big">Big Movie Poster</string>
     <string name="movie_poster_small">Small Movie Poster</string>
     <string name="movie_video_small">Small Movie Video</string>

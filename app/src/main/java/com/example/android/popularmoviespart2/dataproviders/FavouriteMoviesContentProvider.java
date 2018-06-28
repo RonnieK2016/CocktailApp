@@ -28,8 +28,8 @@ public class FavouriteMoviesContentProvider extends ContentProvider {
 
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(FavouriteMoviesDbContract.CONTENT_AUTHORITY, FavouriteMoviesDbContract.PATH_FAVOURITE_MOVIES, MOVIE);
-        uriMatcher.addURI(FavouriteMoviesDbContract.CONTENT_AUTHORITY, FavouriteMoviesDbContract.PATH_FAVOURITE_MOVIES
+        uriMatcher.addURI(FavouriteMoviesDbContract.CONTENT_AUTHORITY, MovieRecord.FAVOURITE_MOVIES_TABLE_NAME, MOVIE);
+        uriMatcher.addURI(FavouriteMoviesDbContract.CONTENT_AUTHORITY, MovieRecord.FAVOURITE_MOVIES_TABLE_NAME
                 + "/#", MOVIE_WITH_ID);
 
         return uriMatcher;

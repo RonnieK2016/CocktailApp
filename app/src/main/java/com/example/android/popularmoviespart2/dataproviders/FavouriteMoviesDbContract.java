@@ -15,7 +15,6 @@ public class FavouriteMoviesDbContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_FAVOURITE_MOVIES = "favourite_movies";
 
     public static final String[] FAVOURITE_MOVIES_COLUMNS = new String[] {
             MovieRecord.ID,
