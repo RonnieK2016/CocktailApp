@@ -26,6 +26,10 @@ public class FavouriteMoviesDbContract {
             MovieRecord.RELEASE_DATE
     };
 
+    public static final String[] GET_MOVIE_BY_ID_COLUMNS = new String[] {
+            MovieRecord.ID
+    };
+
     public static final class MovieRecord implements BaseColumns {
 
         // table name

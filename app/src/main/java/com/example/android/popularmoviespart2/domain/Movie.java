@@ -132,4 +132,8 @@ public class Movie implements Parcelable {
         dest.writeString(overview);
         dest.writeString(releaseDate);
     }
+
+    public boolean isFavourite() {
+        return databaseId != 0;
+    }
 }
