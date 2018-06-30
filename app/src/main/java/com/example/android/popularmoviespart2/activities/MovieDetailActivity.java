@@ -35,6 +35,7 @@ import com.example.android.popularmoviespart2.domain.Movie;
 import com.example.android.popularmoviespart2.domain.Review;
 import com.example.android.popularmoviespart2.domain.SortOptions;
 import com.example.android.popularmoviespart2.domain.Video;
+import com.example.android.popularmoviespart2.listeners.FavouriteChangedEvent;
 import com.example.android.popularmoviespart2.listeners.HttpResponseListener;
 import com.example.android.popularmoviespart2.listeners.MovieAdapterCallback;
 import com.example.android.popularmoviespart2.moviedb.MovieDbHttpResponse;
@@ -44,6 +45,7 @@ import com.example.android.popularmoviespart2.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,6 +123,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieAdapt
                     mLikeButton.setImageResource(R.drawable.ic_like_clicked);
                     Toast.makeText(MovieDetailActivity.this, getResources().getString(R.string.added_to_favourites), Toast.LENGTH_SHORT).show();
                 }
+
+                EventBus.getDefault().post(new FavouriteChangedEvent(true));
             }
         });
 

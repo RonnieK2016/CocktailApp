@@ -29,6 +29,7 @@ import com.example.android.popularmoviespart2.dataproviders.FavouriteMoviesDbCon
 import com.example.android.popularmoviespart2.dataproviders.FavouriteMoviesDbContract.MovieRecord;
 import com.example.android.popularmoviespart2.domain.Movie;
 import com.example.android.popularmoviespart2.domain.SortOptions;
+import com.example.android.popularmoviespart2.listeners.FavouriteChangedEvent;
 import com.example.android.popularmoviespart2.listeners.HttpResponseListener;
 import com.example.android.popularmoviespart2.listeners.MovieAdapterCallback;
 import com.example.android.popularmoviespart2.listeners.MoviesRecyclerViewScrollListener;
@@ -37,6 +38,9 @@ import com.example.android.popularmoviespart2.utils.NetworkUtils;
 import com.example.android.popularmoviespart2.utils.ViewUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -67,7 +71,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     private boolean sortOptionChanged = false;
     private static final String SELECTED_SEARCH_TAG = "SELECTED_SEARCH_TAG";
     private MoviesRecyclerViewScrollListener onScrollListener;
-    private static final int FAVOURITE_MOVIES_LOADER_ID = 0;
+    public static final int FAVOURITE_MOVIES_LOADER_ID = 0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +114,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
             getSupportLoaderManager().initLoader(FAVOURITE_MOVIES_LOADER_ID, null, this);
         }
         else {
+            getSupportLoaderManager().destroyLoader(FAVOURITE_MOVIES_LOADER_ID);
             if (NetworkUtils.isConnectionAvailable(this)) {
                 showHideFavourites(true);
                 showLoadingIndicator();
@@ -248,6 +253,8 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         hideLoadingIndicator();
+        sortOptionChanged = false;
+        mMoviesAdapter.clearMovies();
 
         showHideFavourites(data.getCount() > 0);
 
@@ -272,7 +279,7 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
             }
             while (data.moveToNext());
         }
-        mMoviesAdapter.clearMovies();
+        //mMoviesAdapter.clearMovies();
         mMoviesAdapter.addMovies(resultList);
         mMoviesAdapter.notifyDataSetChanged();
     }
@@ -286,6 +293,29 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     private void showHideFavourites(boolean show) {
         mMoviesListRv.setVisibility(show ? View.VISIBLE : View.GONE);
         mNoFavouriteMoviesTextView.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        super.onDestroy();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavouriteChangedEvent(FavouriteChangedEvent event) {
+        if(SortOptions.FAVOURITE == mSelectedSort) {
+            getSupportLoaderManager().restartLoader(MoviesListActivity.FAVOURITE_MOVIES_LOADER_ID, null, this);
+        }
     }
 
 }
