@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by angelov on 5/2/2018.
  */
 
-public class NetworkUtils {
+public final class NetworkUtils {
 
     public static final String TAG = NetworkUtils.class.getSimpleName();
 

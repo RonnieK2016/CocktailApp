@@ -9,7 +9,7 @@ import com.example.android.popularmoviespart2.domain.Movie;
  * Created by angelov on 6/26/2018.
  */
 
-public class ConverterUtils {
+public final class ConverterUtils {
 
     public static ContentValues movieToContentValues(Movie movie) {
         ContentValues values = new ContentValues();

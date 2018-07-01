@@ -49,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MovieDetailActivity extends AppCompatActivity implements MovieAdapterCallback<Video>,
         HttpResponseListener<MovieDbHttpResponse<Video>>{
@@ -105,28 +106,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieAdapt
         if(movie.isFavourite()) {
             mLikeButton.setImageResource(R.drawable.ic_like_clicked);
         }
-
-        mLikeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(movie.isFavourite()) {
-                    getContentResolver().delete(MovieRecord.CONTENT_URI.buildUpon()
-                            .appendPath(String.valueOf(movie.getDatabaseId())).build(), null, null);
-                    mLikeButton.setImageResource(R.drawable.ic_like_grey);
-                    movie.setDatabaseId(0);
-                    Toast.makeText(MovieDetailActivity.this, getResources().getString(R.string.removed_from_favourites), Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Uri returnUri = getContentResolver().insert(MovieRecord.CONTENT_URI, ConverterUtils.movieToContentValues(movie));
-                    long insertedId = ContentUris.parseId(returnUri);
-                    movie.setDatabaseId((int)insertedId);
-                    mLikeButton.setImageResource(R.drawable.ic_like_clicked);
-                    Toast.makeText(MovieDetailActivity.this, getResources().getString(R.string.added_to_favourites), Toast.LENGTH_SHORT).show();
-                }
-
-                EventBus.getDefault().post(new FavouriteChangedEvent(true));
-            }
-        });
 
         populateDataToViews(movie);
     }
@@ -230,5 +209,25 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieAdapt
             movie = (Movie) savedMovie;
         }
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @OnClick(R.id.like_button)
+    public void onLikeButtonClicked(View v) {
+        if(movie.isFavourite()) {
+            getContentResolver().delete(MovieRecord.CONTENT_URI.buildUpon()
+                    .appendPath(String.valueOf(movie.getDatabaseId())).build(), null, null);
+            mLikeButton.setImageResource(R.drawable.ic_like_grey);
+            movie.setDatabaseId(0);
+            Toast.makeText(MovieDetailActivity.this, getResources().getString(R.string.removed_from_favourites), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Uri returnUri = getContentResolver().insert(MovieRecord.CONTENT_URI, ConverterUtils.movieToContentValues(movie));
+            long insertedId = ContentUris.parseId(returnUri);
+            movie.setDatabaseId((int)insertedId);
+            mLikeButton.setImageResource(R.drawable.ic_like_clicked);
+            Toast.makeText(MovieDetailActivity.this, getResources().getString(R.string.added_to_favourites), Toast.LENGTH_SHORT).show();
+        }
+
+        EventBus.getDefault().post(new FavouriteChangedEvent(true));
     }
 }

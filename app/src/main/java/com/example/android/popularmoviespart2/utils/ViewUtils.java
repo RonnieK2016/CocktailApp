@@ -11,7 +11,7 @@ import com.example.android.popularmoviespart2.R;
  * Created by angelov on 6/18/2018.
  */
 
-public class ViewUtils {
+public final class ViewUtils {
 
     public static void showNoInternetConnectionSnackBar(View layoutToShow, View.OnClickListener callbackListener) {
         Snackbar snackbar = Snackbar

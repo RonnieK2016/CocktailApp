@@ -69,7 +69,11 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
     private SortOptions mSelectedSort = SortOptions.POPULAR;
     private int totalPages = 1;
     private boolean sortOptionChanged = false;
-    private static final String SELECTED_SEARCH_TAG = "SELECTED_SEARCH_TAG";
+    private static final String SEARCH_TAG = "SEARCH_TAG";
+    private static final String MOVIES_LIST_TAG = "MOVIES_LIST_TAG";
+    private static final String TOTAL_PAGES_TAG = "TOTAL_PAGES_TAG";
+    private static final String CURRENT_PAGE_TAG = "CURRENT_PAGE_TAG";
+    private static final String MOVIE_SCROLL_LISTENER_TOTAL_TAG = "MOVIE_SCROLL_LISTENER_TOTAL_TAG";
     private MoviesRecyclerViewScrollListener onScrollListener;
     public static final int FAVOURITE_MOVIES_LOADER_ID = 0;
 
@@ -93,13 +97,30 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
 
         mMoviesListRv.addOnScrollListener(onScrollListener);
         initAdapter();
+
+        if(savedInstanceState != null) {
+
+        }
+
         moviesAccessService = MoviesAccessFactory.getMoviesService(this);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadMovies(mSelectedSort, 1);
+
+        if(savedInstanceState != null) {
+            mSelectedSort = (SortOptions) savedInstanceState.getSerializable(SEARCH_TAG);
+            if(mSelectedSort != SortOptions.FAVOURITE) {
+                totalPages = (int) savedInstanceState.getSerializable(TOTAL_PAGES_TAG);
+                onScrollListener.setCurrentPage((Integer) savedInstanceState.getSerializable(CURRENT_PAGE_TAG));
+                onScrollListener.setPreviousTotal((Integer) savedInstanceState.getSerializable(MOVIE_SCROLL_LISTENER_TOTAL_TAG));
+            }
+            mMoviesAdapter.addMovies(savedInstanceState.<Movie>getParcelableArrayList(MOVIES_LIST_TAG));
+        }
+        else {
+            loadMovies(mSelectedSort, 1);
+        }
     }
 
     private void initAdapter() {
@@ -221,16 +242,18 @@ public class MoviesListActivity extends AppCompatActivity implements HttpRespons
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(SELECTED_SEARCH_TAG, mSelectedSort);
+        outState.putSerializable(SEARCH_TAG, mSelectedSort);
+        outState.putParcelableArrayList(MOVIES_LIST_TAG, mMoviesAdapter.getMovies());
+        if(mSelectedSort != SortOptions.FAVOURITE) {
+            outState.putSerializable(TOTAL_PAGES_TAG, totalPages);
+            outState.putSerializable(CURRENT_PAGE_TAG, onScrollListener.getCurrentPage());
+            outState.putSerializable(MOVIE_SCROLL_LISTENER_TOTAL_TAG, onScrollListener.getPreviousTotal());
+        }
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Object savedSortOption = savedInstanceState.getSerializable(SELECTED_SEARCH_TAG);
-        if(savedSortOption != null) {
-            mSelectedSort = (SortOptions) savedSortOption;
-        }
         super.onRestoreInstanceState(savedInstanceState);
     }
 

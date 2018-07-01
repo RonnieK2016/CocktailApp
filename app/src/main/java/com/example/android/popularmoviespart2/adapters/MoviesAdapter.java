@@ -12,6 +12,7 @@ import com.example.android.popularmoviespart2.holders.MovieViewHolder;
 import com.example.android.popularmoviespart2.listeners.MovieAdapterCallback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,9 +22,9 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private MovieAdapterCallback<Movie> mCallbacks;
     private Context mContext;
-    private List<Movie> mMovies;
+    private ArrayList<Movie> mMovies;
 
-    public MoviesAdapter(List<Movie> movies) {
+    public MoviesAdapter(ArrayList<Movie> movies) {
         this.mMovies = movies;
     }
 
@@ -74,6 +75,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void setCallbacks(MovieAdapterCallback<Movie> callbacks) {
         this.mCallbacks = callbacks;
+    }
+
+    public ArrayList<Movie> getMovies() {
+        return mMovies;
     }
 
 }
