@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.popularmoviespart2">
+    package="com.example.android.cocktailsapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,30 +11,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.android.popularmoviespart2.activities.MoviesListActivity" android:launchMode="singleTop">
+        <activity android:name="com.example.android.cocktailsapp.activities.CocktailListActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.android.popularmoviespart2.activities.MovieDetailActivity"
-            android:parentActivityName="com.example.android.popularmoviespart2.activities.MoviesListActivity">
+            android:name="com.example.android.cocktailsapp.activities.CocktailDetailActivity"
+            android:parentActivityName="com.example.android.cocktailsapp.activities.CocktailListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.popularmoviespart2.activities.MoviesListActivity" />
+                android:value="com.example.android.cocktailsapp.activities.CocktailListActivity" />
         </activity>
         <activity
-            android:name="com.example.android.popularmoviespart2.activities.ReviewsActivity"
-            android:parentActivityName="com.example.android.popularmoviespart2.activities.MovieDetailActivity">
+            android:name="com.example.android.cocktailsapp.activities.SearchCocktailActivity"
+            android:parentActivityName="com.example.android.cocktailsapp.activities.CocktailDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.popularmoviespart2.activities.MovieDetailActivity" />
+                android:value="com.example.android.cocktailsapp.activities.CocktailDetailActivity" />
         </activity>
 
         <provider
             android:authorities="@string/content_authority"
-            android:name=".dataproviders.FavouriteMoviesContentProvider"
+            android:name="com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsContentProvider"
             android:exported="false"
             android:syncable="true"/>
 

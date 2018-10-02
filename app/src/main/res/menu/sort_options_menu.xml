@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.popularmoviespart2.activities.MoviesListActivity">
+    tools:context="com.example.android.cocktailsapp.activities.CocktailListActivity">
 
     <item
         android:id="@+id/action_sort"
         android:orderInCategory="100"
-        android:title="@string/action_sort"
+        android:title="@string/action_filter"
         android:icon="@drawable/ic_sort_24dp"
         app:showAsAction="always">
         <menu>
@@ -16,11 +16,11 @@
                 android:checkableBehavior="single">
                 <item
                     android:id="@+id/sort_by_popularity"
-                    android:title="@string/sort_by_popularity" />
+                    android:title="@string/alcoholic" />
 
                 <item
                     android:id="@+id/sort_by_top_rated"
-                    android:title="@string/sort_by_top_rated" />
+                    android:title="@string/non_alcoholic" />
 
                 <item
                     android:id="@+id/favourite_movies"

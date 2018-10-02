@@ -4,14 +4,14 @@ android {
     compileSdkVersion 27
     buildToolsVersion "26.0.3"
     defaultConfig {
-        applicationId "com.example.android.popularmoviespart1"
+        applicationId "com.example.android.cocktailsapp"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "String", "MOVIE_DB_API_KEY", '"PUT_YOUR_MOVIE_DB_KEY_HERE"'
+        buildConfigField "String", "COCKTAILS_DB_API_KEY", '"1"'
         javaCompileOptions{
             annotationProcessorOptions.includeCompileClasspath = true
         }

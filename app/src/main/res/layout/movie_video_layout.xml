@@ -19,5 +19,5 @@
         android:layout_height="wrap_content"
         android:singleLine="false"
         android:id="@+id/movie_video_title"
-        android:contentDescription="@string/movie_poster_small"/>
+        android:contentDescription="@string/cocktail_image_small"/>
 </LinearLayout>

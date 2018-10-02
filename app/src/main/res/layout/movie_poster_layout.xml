@@ -7,10 +7,16 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/movie_poster"
+        android:id="@+id/cocktail_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/movie_poster_small"
+        android:contentDescription="@string/cocktail_image_small"
         android:adjustViewBounds="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cocktail_name"/>
+
 </LinearLayout>
