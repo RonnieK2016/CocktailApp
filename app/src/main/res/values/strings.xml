@@ -16,4 +16,5 @@
     <string name="cocktail_name">Cocktail Name</string>
     <string name="cocktail_instructions">Cocktail Instructions</string>
     <string name="cocktail_ingredients">Cocktail Ingredients</string>
+    <string name="action_share">Share</string>
 </resources>
