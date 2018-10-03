@@ -26,7 +26,7 @@
         android:id="@+id/no_favourite_movies"
         android:visibility="gone"
         android:gravity="center"
-        android:text="@string/no_favourite_movies_available"
+        android:text="@string/no_favourite_cocktails_available"
         android:textColor="@color/secondaryText"
         android:textSize="22sp"/>
 

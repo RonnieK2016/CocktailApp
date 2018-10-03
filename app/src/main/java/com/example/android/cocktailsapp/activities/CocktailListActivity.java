@@ -34,6 +34,7 @@ import com.example.android.cocktailsapp.listeners.HttpResponseListener;
 import com.example.android.cocktailsapp.listeners.MovieAdapterCallback;
 import com.example.android.cocktailsapp.listeners.CocktailsRecyclerViewScrollListener;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
+import com.example.android.cocktailsapp.utils.ConverterUtils;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
 
@@ -77,7 +78,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movies_list);
+        setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
         mMoviesListRv.setLayoutManager(gridLayoutManager);
@@ -87,7 +88,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
             @Override
             protected void loadMoreItems(int currentPage) {
                 if(currentPage < totalPages) {
-                    loadMovies(mSelectedSort, currentPage);
+                    loadCocktails(mSelectedSort, currentPage);
                 }
             }
         };
@@ -113,10 +114,10 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
                 onScrollListener.setCurrentPage((Integer) savedInstanceState.getSerializable(CURRENT_PAGE_TAG));
                 onScrollListener.setPreviousTotal((Integer) savedInstanceState.getSerializable(COCKTAIL_SCROLL_LISTENER_TOTAL_TAG));
             }
-            mCocktailsAdapter.addMovies(savedInstanceState.<Cocktail>getParcelableArrayList(COCKTAILS_LIST_TAG));
+            mCocktailsAdapter.addCocktails(savedInstanceState.<Cocktail>getParcelableArrayList(COCKTAILS_LIST_TAG));
         }
         else {
-            loadMovies(mSelectedSort, 1);
+            loadCocktails(mSelectedSort, 1);
         }
     }
 
@@ -126,7 +127,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
         mMoviesListRv.setAdapter(mCocktailsAdapter);
     }
 
-    private void loadMovies(final SortOptions sort, int currentPage) {
+    private void loadCocktails(final SortOptions sort, int currentPage) {
         if(SortOptions.FAVOURITE == sort){
             showLoadingIndicator();
             getSupportLoaderManager().initLoader(FAVOURITE_COCKTAILS_LOADER_ID, null, this);
@@ -145,7 +146,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
                 ViewUtils.showNoInternetConnectionSnackBar(mMainLayout, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        loadMovies(sort, 1);
+                        loadCocktails(sort, 1);
                     }
                 });
             }
@@ -184,7 +185,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
             sortOptionChanged = false;
             mCocktailsAdapter.clearMovies();
         }
-        mCocktailsAdapter.addMovies(response.getCocktails());
+        mCocktailsAdapter.addCocktails(response.getCocktails());
         mCocktailsAdapter.notifyDataSetChanged();
     }
 
@@ -198,13 +199,13 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     public boolean onPrepareOptionsMenu(Menu menu) {
         switch (mSelectedSort) {
             case NON_ALCOHOLIC:
-                menu.findItem(R.id.sort_by_top_rated).setChecked(true);
+                menu.findItem(R.id.filter_by_non_alcoholic).setChecked(true);
                 break;
             case ALCOHOLIC:
-                menu.findItem(R.id.sort_by_popularity).setChecked(true);
+                menu.findItem(R.id.filter_by_alcoholic).setChecked(true);
                 break;
             case FAVOURITE:
-                menu.findItem(R.id.favourite_movies).setChecked(true);
+                menu.findItem(R.id.favourite_cocktails).setChecked(true);
         }
         return true;
     }
@@ -217,23 +218,23 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
             sortOptionChanged = true;
             onScrollListener.resetState();
             switch (item.getItemId()) {
-                case R.id.sort_by_popularity:
-                    sortMoviesBySelection(SortOptions.ALCOHOLIC);
+                case R.id.filter_by_alcoholic:
+                    filterCocktailsBySelection(SortOptions.ALCOHOLIC);
                     break;
-                case R.id.sort_by_top_rated:
-                    sortMoviesBySelection(SortOptions.NON_ALCOHOLIC);
+                case R.id.filter_by_non_alcoholic:
+                    filterCocktailsBySelection(SortOptions.NON_ALCOHOLIC);
                     break;
-                case R.id.favourite_movies:
-                    sortMoviesBySelection(SortOptions.FAVOURITE);
+                case R.id.favourite_cocktails:
+                    filterCocktailsBySelection(SortOptions.FAVOURITE);
                     break;
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void sortMoviesBySelection(SortOptions selectedSort) {
+    private void filterCocktailsBySelection(SortOptions selectedSort) {
         mSelectedSort = selectedSort;
-        loadMovies(selectedSort, 1);
+        loadCocktails(selectedSort, 1);
     }
 
     @Override
@@ -287,19 +288,12 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
 
         if(data.moveToFirst()) {
             do {
-                int databaseId = data.getInt(data.getColumnIndex(CocktailRecord.ID));
-                int movieId = data.getInt(data.getColumnIndex(CocktailRecord.DB_ID));
-                String title = data.getString(data.getColumnIndex(CocktailRecord.TITLE));
-                String posterPath = data.getString(data.getColumnIndex(CocktailRecord.POSTER_PATH));
-                double voteAverage = data.getDouble(data.getColumnIndex(CocktailRecord.VOTE_AVERAGE));
-                String overview = data.getString(data.getColumnIndex(CocktailRecord.OVERVIEW));
-                String releaseData = data.getString(data.getColumnIndex(CocktailRecord.RELEASE_DATE));
-                //resultList.add(new Cocktail(movieId, databaseId, title, posterPath, voteAverage, overview, releaseData));
+                resultList.add(ConverterUtils.readCursorAsCocktail(data));
             }
             while (data.moveToNext());
         }
         //mCocktailsAdapter.clearMovies();
-        mCocktailsAdapter.addMovies(resultList);
+        mCocktailsAdapter.addCocktails(resultList);
         mCocktailsAdapter.notifyDataSetChanged();
     }
 

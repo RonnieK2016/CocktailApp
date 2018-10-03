@@ -15,16 +15,16 @@
                 android:id="@+id/sort_group"
                 android:checkableBehavior="single">
                 <item
-                    android:id="@+id/sort_by_popularity"
+                    android:id="@+id/filter_by_alcoholic"
                     android:title="@string/alcoholic" />
 
                 <item
-                    android:id="@+id/sort_by_top_rated"
+                    android:id="@+id/filter_by_non_alcoholic"
                     android:title="@string/non_alcoholic" />
 
                 <item
-                    android:id="@+id/favourite_movies"
-                    android:title="@string/favourite_movies" />
+                    android:id="@+id/favourite_cocktails"
+                    android:title="@string/favourite_cocktails" />
             </group>
         </menu>
     </item>

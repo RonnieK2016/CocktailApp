@@ -75,8 +75,10 @@ public class Cocktail implements Parcelable {
         alcoholic = source.readString();
         imageUrl = source.readString();
         instructions = source.readString();
-        ingredients = (String[])source.readArray(java.lang.String.class.getClassLoader());
-        measurements = (String[])source.readArray(java.lang.String.class.getClassLoader());
+        ingredients = new String[15];
+        source.readStringArray(ingredients);
+        measurements = new String[15];
+        source.readStringArray(measurements);
     }
 
     @Override

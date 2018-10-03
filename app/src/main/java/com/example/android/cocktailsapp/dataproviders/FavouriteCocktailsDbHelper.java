@@ -26,11 +26,13 @@ public class FavouriteCocktailsDbHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE = "CREATE TABLE "  + CocktailRecord.FAVOURITE_COCKTAILS_TABLE_NAME + " (" +
                 CocktailRecord.ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 CocktailRecord.DB_ID               + " INTEGER NOT NULL, " +
-                CocktailRecord.TITLE               + " TEXT NOT NULL, " +
-                CocktailRecord.POSTER_PATH         + " TEXT, " +
-                CocktailRecord.VOTE_AVERAGE        + " REAL NOT NULL, " +
-                CocktailRecord.OVERVIEW            + " TEXT NOT NULL, " +
-                CocktailRecord.RELEASE_DATE + " TEXT NOT NULL);";
+                CocktailRecord.COCKTAIL_NAME + " TEXT NOT NULL, " +
+                CocktailRecord.COCKTAIL_IMAGE_URL + " TEXT, " +
+                CocktailRecord.CATEGORY + " TEXT, " +
+                CocktailRecord.ALCOHOLIC + " TEXT, " +
+                CocktailRecord.INGREDIENTS + " TEXT, " +
+                CocktailRecord.INSTRUCTIONS + " TEXT, " +
+                CocktailRecord.MEASUREMENTS + " TEXT);";
 
         db.execSQL(CREATE_TABLE);
 

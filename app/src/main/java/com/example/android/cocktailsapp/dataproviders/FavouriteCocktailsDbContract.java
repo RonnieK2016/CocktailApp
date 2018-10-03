@@ -19,15 +19,13 @@ public class FavouriteCocktailsDbContract {
     public static final String[] FAVOURITE_COCKTAILS_COLUMNS = new String[] {
             CocktailRecord.ID,
             CocktailRecord.DB_ID,
-            CocktailRecord.TITLE,
-            CocktailRecord.POSTER_PATH,
-            CocktailRecord.VOTE_AVERAGE,
-            CocktailRecord.OVERVIEW,
-            CocktailRecord.RELEASE_DATE
-    };
-
-    public static final String[] GET_COCKTAIL_BY_ID_COLUMNS = new String[] {
-            CocktailRecord.ID
+            CocktailRecord.COCKTAIL_NAME,
+            CocktailRecord.COCKTAIL_IMAGE_URL,
+            CocktailRecord.CATEGORY,
+            CocktailRecord.ALCOHOLIC,
+            CocktailRecord.INSTRUCTIONS,
+            CocktailRecord.INGREDIENTS,
+            CocktailRecord.MEASUREMENTS
     };
 
     public static final class CocktailRecord implements BaseColumns {
@@ -38,11 +36,13 @@ public class FavouriteCocktailsDbContract {
         // columns
         public static final String ID="ID";
         public static final String DB_ID = "DB_ID";
-        public static final String TITLE = "TITLE";
-        public static final String POSTER_PATH = "POSTER_PATH";
-        public static final String VOTE_AVERAGE = "VOTE_AVERAGE";
-        public static final String OVERVIEW = "OVERVIEW";
-        public static final String RELEASE_DATE = "RELEASE_DATE";
+        public static final String COCKTAIL_NAME = "COCKTAIL_NAME";
+        public static final String COCKTAIL_IMAGE_URL = "COCKTAIL_IMAGE_URL";
+        public static final String CATEGORY = "CATEGORY";
+        public static final String ALCOHOLIC = "ALCOHOLIC";
+        public static final String INSTRUCTIONS = "INSTRUCTIONS";
+        public static final String INGREDIENTS = "INGREDIENTS";
+        public static final String MEASUREMENTS = "MEASUREMENTS";
 
         // create content uri
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(FAVOURITE_COCKTAILS_TABLE_NAME).build();

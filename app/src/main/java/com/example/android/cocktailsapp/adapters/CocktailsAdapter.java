@@ -30,7 +30,7 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        View view = View.inflate(parent.getContext(), R.layout.movie_poster_layout, null);
+        View view = View.inflate(parent.getContext(), R.layout.cocktail_grid_item_layout, null);
         return new CocktailViewHolder(view);
     }
 
@@ -44,7 +44,7 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             Picasso.with(mContext)
                     .load(selectedCocktail.getImageUrl())
-                    .placeholder(R.drawable.ic_posterplaceholder)
+                    .placeholder(R.drawable.ic_cocktail_placeholder)
                     .into(cocktailViewHolder.cocktailImage);
 
             cocktailViewHolder.cocktailName.setText(selectedCocktail.getCocktailName());
@@ -61,7 +61,7 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     }
 
-    public void addMovies(List<Cocktail> cocktails) {
+    public void addCocktails(List<Cocktail> cocktails) {
         mCocktails.addAll(cocktails);
     }
 
