@@ -64,7 +64,7 @@ public final class ConverterUtils {
             return null;
         }
 
-        return inputString.split(ARRAY_ITEM_SEPARATOR);
+        return inputString.split(ARRAY_ITEM_SEPARATOR, -1);
     }
 
 
