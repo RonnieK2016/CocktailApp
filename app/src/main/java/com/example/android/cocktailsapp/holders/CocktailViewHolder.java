@@ -3,6 +3,7 @@ package com.example.android.cocktailsapp.holders;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.cocktailsapp.R;
@@ -15,6 +16,8 @@ import butterknife.ButterKnife;
  */
 public class CocktailViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.cocktail_grid_item)
+    public LinearLayout mCocktailGridItem;
     @BindView(R.id.cocktail_image)
     public ImageView cocktailImage;
     @BindView(R.id.cocktail_name)

@@ -42,6 +42,11 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             final CocktailViewHolder cocktailViewHolder = (CocktailViewHolder) holder;
 
+            //disable animation when there no callbacks defined
+            if (mCallbacks == null) {
+                cocktailViewHolder.mCocktailGridItem.setBackground(mContext.getDrawable(R.drawable.grid_color_selector_disabled));
+            }
+
             Picasso.with(mContext)
                     .load(selectedCocktail.getImageUrl())
                     .placeholder(R.drawable.ic_cocktail_placeholder)
