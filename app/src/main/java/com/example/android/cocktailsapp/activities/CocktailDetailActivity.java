@@ -20,16 +20,14 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
-import com.example.android.cocktailsapp.adapters.VideosAdapter;
 import com.example.android.cocktailsapp.dao.CocktailsAccessFactory;
 import com.example.android.cocktailsapp.dao.CocktailsAccessService;
 import com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsDbContract;
 import com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsDbContract.CocktailRecord;
 import com.example.android.cocktailsapp.domain.Cocktail;
-import com.example.android.cocktailsapp.domain.SortOptions;
 import com.example.android.cocktailsapp.listeners.FavouriteChangedEvent;
 import com.example.android.cocktailsapp.listeners.HttpResponseListener;
-import com.example.android.cocktailsapp.listeners.MovieAdapterCallback;
+import com.example.android.cocktailsapp.listeners.CocktailAdapterCallback;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.utils.ConverterUtils;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
@@ -43,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CocktailDetailActivity extends AppCompatActivity implements MovieAdapterCallback<Cocktail>,
+public class CocktailDetailActivity extends AppCompatActivity implements CocktailAdapterCallback<Cocktail>,
         HttpResponseListener<CocktailDbHttpResponse<Cocktail>>{
 
     public static final String SAVED_COCKTAIL_TAG = "SAVED_COCKTAIL_TAG";

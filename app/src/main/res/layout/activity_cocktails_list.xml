@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_movies_list"
+    android:id="@+id/activity_cocktails_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_movies"
+        android:id="@+id/rv_cocktails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:id="@+id/no_favourite_movies"
+        android:id="@+id/no_favourite_cocktails"
         android:visibility="gone"
         android:gravity="center"
         android:text="@string/no_favourite_cocktails_available"

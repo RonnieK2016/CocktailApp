@@ -31,7 +31,7 @@ import com.example.android.cocktailsapp.domain.Cocktail;
 import com.example.android.cocktailsapp.domain.SortOptions;
 import com.example.android.cocktailsapp.listeners.FavouriteChangedEvent;
 import com.example.android.cocktailsapp.listeners.HttpResponseListener;
-import com.example.android.cocktailsapp.listeners.MovieAdapterCallback;
+import com.example.android.cocktailsapp.listeners.CocktailAdapterCallback;
 import com.example.android.cocktailsapp.listeners.CocktailsRecyclerViewScrollListener;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.utils.ConverterUtils;
@@ -50,16 +50,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CocktailListActivity extends AppCompatActivity implements HttpResponseListener<CocktailDbHttpResponse<Cocktail>>,
-        MovieAdapterCallback<Cocktail>, LoaderManager.LoaderCallbacks<Cursor>  {
+        CocktailAdapterCallback<Cocktail>, LoaderManager.LoaderCallbacks<Cursor>  {
 
     private CocktailsAdapter mCocktailsAdapter;
-    @BindView(R.id.rv_movies)
-    public RecyclerView mMoviesListRv;
-    @BindView(R.id.no_favourite_movies)
-    TextView mNoFavouriteMoviesTextView;
+    @BindView(R.id.rv_cocktails)
+    public RecyclerView mCocktailsListRv;
+    @BindView(R.id.no_favourite_cocktails)
+    TextView mNoFavouriteCocktailsTextView;
     @BindView(R.id.pb_loading_indicator)
     public ProgressBar mLoadingIndicator;
-    @BindView(R.id.activity_movies_list)
+    @BindView(R.id.activity_cocktails_list)
     public RelativeLayout mMainLayout;
     private static final int NUMBER_OF_COLUMNS = 2;
     private static final String TAG = CocktailListActivity.class.getSimpleName();
@@ -81,7 +81,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
         setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
-        mMoviesListRv.setLayoutManager(gridLayoutManager);
+        mCocktailsListRv.setLayoutManager(gridLayoutManager);
 
         onScrollListener = new CocktailsRecyclerViewScrollListener(gridLayoutManager){
 
@@ -93,12 +93,8 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
             }
         };
 
-        mMoviesListRv.addOnScrollListener(onScrollListener);
+        mCocktailsListRv.addOnScrollListener(onScrollListener);
         initAdapter();
-
-        if(savedInstanceState != null) {
-
-        }
 
         cocktailsAccessService = CocktailsAccessFactory.getCocktailsService(this);
     }
@@ -124,7 +120,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     private void initAdapter() {
         mCocktailsAdapter = new CocktailsAdapter(new ArrayList<Cocktail>());
         mCocktailsAdapter.setCallbacks(this);
-        mMoviesListRv.setAdapter(mCocktailsAdapter);
+        mCocktailsListRv.setAdapter(mCocktailsAdapter);
     }
 
     private void loadCocktails(final SortOptions sort, int currentPage) {
@@ -170,7 +166,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e(TAG, "Can't load movies: ", error);
+        Log.e(TAG, "Can't load cocktails: ", error);
     }
 
     @Override
@@ -183,7 +179,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
 
         if (sortOptionChanged) {
             sortOptionChanged = false;
-            mCocktailsAdapter.clearMovies();
+            mCocktailsAdapter.clearCocktails();
         }
         mCocktailsAdapter.addCocktails(response.getCocktails());
         mCocktailsAdapter.notifyDataSetChanged();
@@ -240,7 +236,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(SEARCH_TAG, mSelectedSort);
-        outState.putParcelableArrayList(COCKTAILS_LIST_TAG, mCocktailsAdapter.getMovies());
+        outState.putParcelableArrayList(COCKTAILS_LIST_TAG, mCocktailsAdapter.getCocktails());
         if(mSelectedSort != SortOptions.FAVOURITE) {
             outState.putSerializable(TOTAL_PAGES_TAG, totalPages);
             outState.putSerializable(CURRENT_PAGE_TAG, onScrollListener.getCurrentPage());
@@ -274,7 +270,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         hideLoadingIndicator();
         sortOptionChanged = false;
-        mCocktailsAdapter.clearMovies();
+        mCocktailsAdapter.clearCocktails();
 
         showHideFavourites(data.getCount() > 0);
 
@@ -292,20 +288,20 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
             }
             while (data.moveToNext());
         }
-        //mCocktailsAdapter.clearMovies();
+        //mCocktailsAdapter.clearCocktails();
         mCocktailsAdapter.addCocktails(resultList);
         mCocktailsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCocktailsAdapter.clearMovies();
+        mCocktailsAdapter.clearCocktails();
         mCocktailsAdapter.notifyDataSetChanged();
     }
 
     private void showHideFavourites(boolean show) {
-        mMoviesListRv.setVisibility(show ? View.VISIBLE : View.GONE);
-        mNoFavouriteMoviesTextView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mCocktailsListRv.setVisibility(show ? View.VISIBLE : View.GONE);
+        mNoFavouriteCocktailsTextView.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     @Override

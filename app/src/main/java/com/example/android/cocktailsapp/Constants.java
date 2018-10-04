@@ -5,7 +5,8 @@ package com.example.android.cocktailsapp;
  */
 
 public interface Constants {
-    String COCKTAIL_DETAIL_INTENT_TAG = "MOVIE_INTENT_TAG";
+    String COCKTAIL_DETAIL_INTENT_TAG = "COCKTAIL_DETAIL_INTENT_TAG";
+    String COCKTAIL_INGREDIENT_INTENT_TAG = "COCKTAIL_INGREDIENT_INTENT_TAG";
     String COCKTAIL_DB_BASE_PATH = "https://www.thecocktaildb.com/api/json/v1/" + BuildConfig.COCKTAILS_DB_API_KEY + "/";
     String COCKTAIL_DB_SEARCH_BY_ALCOHOL_PATH = "/filter.php?a=";
     String COCKTAIL_DB_SEARCH_BY_INGREDIENT_PATH = "/filter.php?i=";

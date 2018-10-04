@@ -8,6 +8,7 @@
     <string name="non_alcoholic">Non-Alcoholic</string>
     <string name="favourite_cocktails">Favourite Cocktails</string>
     <string name="no_favourite_cocktails_available">You don\'t have any favourite cocktails yet</string>
+    <string name="no_cocktails_found">No cocktails found by selected ingredient</string>
     <string name="movie_poster_big">Big Cocktail Image</string>
     <string name="cocktail_image_small">Small Cocktail Image</string>
     <string name="content_authority">com.example.android.cocktailsapp</string>

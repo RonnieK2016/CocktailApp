@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.example.android.cocktailsapp.R;
 import com.example.android.cocktailsapp.domain.Cocktail;
 import com.example.android.cocktailsapp.holders.CocktailViewHolder;
-import com.example.android.cocktailsapp.listeners.MovieAdapterCallback;
+import com.example.android.cocktailsapp.listeners.CocktailAdapterCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private MovieAdapterCallback<Cocktail> mCallbacks;
+    private CocktailAdapterCallback<Cocktail> mCallbacks;
     private Context mContext;
     private ArrayList<Cocktail> mCocktails;
 
@@ -65,7 +65,7 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mCocktails.addAll(cocktails);
     }
 
-    public void clearMovies() {
+    public void clearCocktails() {
         mCocktails.clear();
     }
 
@@ -74,11 +74,11 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return (mCocktails !=null? mCocktails.size():0);
     }
 
-    public void setCallbacks(MovieAdapterCallback<Cocktail> callbacks) {
+    public void setCallbacks(CocktailAdapterCallback<Cocktail> callbacks) {
         this.mCallbacks = callbacks;
     }
 
-    public ArrayList<Cocktail> getMovies() {
+    public ArrayList<Cocktail> getCocktails() {
         return mCocktails;
     }
 

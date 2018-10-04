@@ -3,31 +3,30 @@ package com.example.android.cocktailsapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
-import com.example.android.cocktailsapp.adapters.ReviewsAdapter;
+import com.example.android.cocktailsapp.adapters.CocktailsAdapter;
 import com.example.android.cocktailsapp.dao.CocktailsAccessFactory;
 import com.example.android.cocktailsapp.dao.CocktailsAccessService;
 import com.example.android.cocktailsapp.domain.Cocktail;
-import com.example.android.cocktailsapp.domain.Review;
 import com.example.android.cocktailsapp.listeners.HttpResponseListener;
-import com.example.android.cocktailsapp.listeners.CocktailsRecyclerViewScrollListener;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 
@@ -40,67 +39,51 @@ import butterknife.ButterKnife;
 
 public class SearchCocktailActivity extends AppCompatActivity implements HttpResponseListener<CocktailDbHttpResponse<Cocktail>> {
 
-    @BindView(R.id.movie_details_review_layout)
-    RelativeLayout mMainMovieDetailLayout;
-    @BindView(R.id.pb_reviews_loading_indicator)
-    ProgressBar mLoadingIndicator;
-    @BindView(R.id.rv_reviews)
-    RecyclerView mReviewsRv;
+    private CocktailsAdapter mCocktailsAdapter;
+    @BindView(R.id.rv_cocktails)
+    public RecyclerView mCocktailsListRv;
+    @BindView(R.id.no_favourite_cocktails)
+    TextView mNoFavouriteCocktailsTextView;
+    @BindView(R.id.pb_loading_indicator)
+    public ProgressBar mLoadingIndicator;
+    @BindView(R.id.activity_cocktails_list)
+    public RelativeLayout mMainLayout;
     private CocktailsAccessService cocktailsAccessService;
-    private CocktailsRecyclerViewScrollListener onScrollListener;
-    private int totalPages = 1;
-    private int movieId;
-    private ReviewsAdapter mReviewsAdapter;
+    private String ingredient;
     private static final String TAG = SearchCocktailActivity.class.getSimpleName();
+    private static final int NUMBER_OF_COLUMNS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movie_reviews_layout);
+
+        setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
-        movieId = readMovieIdFromIntent();
-        cocktailsAccessService = CocktailsAccessFactory.getCocktailsService(this);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL, false);
-        mReviewsRv.setLayoutManager(linearLayoutManager);
-
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+        mCocktailsListRv.setLayoutManager(gridLayoutManager);
+        readIngredientFromIntent();
         initAdapter();
-
-        onScrollListener = new CocktailsRecyclerViewScrollListener(linearLayoutManager){
-
-            @Override
-            protected void loadMoreItems(int currentPage) {
-                if(currentPage < totalPages) {
-                    loadReviews(movieId, currentPage);
-                }
-            }
-        };
-
-        mReviewsRv.addOnScrollListener(onScrollListener);
+        cocktailsAccessService = CocktailsAccessFactory.getCocktailsService(this);
+        mNoFavouriteCocktailsTextView.setText(getResources().getString(R.string.no_cocktails_found));
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        loadReviews(movieId, 1);
-    }
-
-    private Integer readMovieIdFromIntent() {
-        Intent intent = getIntent();
-        if(intent != null && intent.hasExtra(Constants.COCKTAIL_DETAIL_INTENT_TAG)) {
-            Cocktail cocktail = intent.getExtras().getParcelable(Constants.COCKTAIL_DETAIL_INTENT_TAG);
-            ActionBar toolbar = getSupportActionBar();
-            if (toolbar != null) {
-                toolbar.setTitle(cocktail.getCocktailName());
-                toolbar.setDisplayHomeAsUpEnabled(true);
-            }
-            return cocktail.getId();
+        if (!StringUtils.isEmpty(ingredient)) {
+            loadSearchResults(ingredient, 1);
         }
-        return null;
+        else {
+            showNoResultsFound(true);
+        }
     }
 
-
+    private void readIngredientFromIntent() {
+        Intent intent = getIntent();
+        if(intent != null && intent.hasExtra(Constants.COCKTAIL_INGREDIENT_INTENT_TAG)) {
+            ingredient = intent.getExtras().getString(Constants.COCKTAIL_INGREDIENT_INTENT_TAG);
+        }
+    }
 
     private void showLoadingIndicator(){
         mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -110,16 +93,16 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
         mLoadingIndicator.setVisibility(View.INVISIBLE);
     }
 
-    private void loadReviews(final int movieId, final int currentPage) {
+    private void loadSearchResults(final String ingredient, final int currentPage) {
         if(NetworkUtils.isConnectionAvailable(this)) {
             showLoadingIndicator();
-            cocktailsAccessService.searchCocktailByIngredient(this, "", currentPage);
+            cocktailsAccessService.searchCocktailByIngredient(this, ingredient, currentPage);
         }
         else {
-            ViewUtils.showNoInternetConnectionSnackBar(mMainMovieDetailLayout, new View.OnClickListener() {
+            ViewUtils.showNoInternetConnectionSnackBar(mMainLayout, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    loadReviews(movieId, currentPage);
+                    loadSearchResults(ingredient, currentPage);
                 }
             });
         }
@@ -138,8 +121,13 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
 
 
     private void initAdapter() {
-        mReviewsAdapter = new ReviewsAdapter(new ArrayList<Cocktail>());
-        mReviewsRv.setAdapter(mReviewsAdapter);
+        mCocktailsAdapter = new CocktailsAdapter(new ArrayList<Cocktail>());
+        mCocktailsListRv.setAdapter(mCocktailsAdapter);
+    }
+
+    private void showNoResultsFound(boolean show) {
+        mNoFavouriteCocktailsTextView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mCocktailsListRv.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -152,10 +140,13 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
         hideLoadingIndicator();
 
         if(response == null || CollectionUtils.isEmpty(response.getCocktails())) {
+            showNoResultsFound(true);
             return;
         }
 
-        mReviewsAdapter.addReviews(response.getCocktails());
-        mReviewsAdapter.notifyDataSetChanged();
+        showNoResultsFound(false);
+
+        mCocktailsAdapter.addCocktails(response.getCocktails());
+        mCocktailsAdapter.notifyDataSetChanged();
     }
 }

@@ -5,12 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
 import com.example.android.cocktailsapp.domain.Video;
 import com.example.android.cocktailsapp.holders.VideoViewHolder;
-import com.example.android.cocktailsapp.listeners.MovieAdapterCallback;
-import com.squareup.picasso.Picasso;
+import com.example.android.cocktailsapp.listeners.CocktailAdapterCallback;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
  */
 
 public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private MovieAdapterCallback<Video> mCallbacks;
+    private CocktailAdapterCallback<Video> mCallbacks;
     private Context mContext;
     private List<Video> mVideos;
 
@@ -62,7 +60,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return (mVideos !=null? mVideos.size():0);
     }
 
-    public void setCallbacks(MovieAdapterCallback<Video> callbacks) {
+    public void setCallbacks(CocktailAdapterCallback<Video> callbacks) {
         this.mCallbacks = callbacks;
     }
 
