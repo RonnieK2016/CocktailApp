@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_app_icon"
@@ -11,33 +12,49 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.android.cocktailsapp.activities.CocktailListActivity" android:launchMode="singleTop">
+        <activity
+            android:name=".activities.CocktailListActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.android.cocktailsapp.activities.CocktailDetailActivity"
-            android:parentActivityName="com.example.android.cocktailsapp.activities.CocktailListActivity">
+            android:name=".activities.CocktailDetailActivity"
+            android:parentActivityName=".activities.CocktailListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.cocktailsapp.activities.CocktailListActivity" />
         </activity>
         <activity
-            android:name="com.example.android.cocktailsapp.activities.SearchCocktailActivity"
-            android:parentActivityName="com.example.android.cocktailsapp.activities.CocktailDetailActivity">
+            android:name=".activities.SearchCocktailActivity"
+            android:parentActivityName=".activities.CocktailDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.cocktailsapp.activities.CocktailDetailActivity" />
         </activity>
 
         <provider
+            android:name=".dataproviders.FavouriteCocktailsContentProvider"
             android:authorities="@string/content_authority"
-            android:name="com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsContentProvider"
-            android:exported="false"
-            android:syncable="true"/>
+            android:exported="true"
+            android:syncable="true" />
 
+        <receiver android:name=".widget.CocktailAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cocktail_app_widget_info" />
+        </receiver>
+        <service android:name=".widget.GridWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <service android:name=".widget.CocktailWidgetService" />
     </application>
 
 </manifest>

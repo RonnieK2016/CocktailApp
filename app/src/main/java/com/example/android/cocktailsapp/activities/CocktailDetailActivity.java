@@ -38,6 +38,7 @@ import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.utils.ConverterUtils;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
+import com.example.android.cocktailsapp.widget.CocktailWidgetService;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -123,6 +124,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
         movieTitle.setText(cocktail.getCocktailName());
         Picasso.with(this)
                 .load(cocktail.getImageUrl())
+                .placeholder(R.drawable.ic_cocktail_placeholder)
                 .into(cocktailImageBig);
         instructions.setText(cocktail.getInstructions());
 
@@ -226,6 +228,8 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
             mLikeButton.setImageResource(R.drawable.ic_like_clicked);
             Toast.makeText(CocktailDetailActivity.this, getResources().getString(R.string.added_to_favourites), Toast.LENGTH_SHORT).show();
         }
+
+        CocktailWidgetService.startActionUpdateCocktailWidgets(this);
 
         EventBus.getDefault().post(new FavouriteChangedEvent(true));
     }

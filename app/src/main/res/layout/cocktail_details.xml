@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/movie_poster_big"
+                android:contentDescription="@string/cocktail_poster_big"
                 android:scaleType="centerCrop" />
 
 
