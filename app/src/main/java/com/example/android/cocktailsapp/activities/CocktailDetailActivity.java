@@ -84,6 +84,9 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
 
         mIngredientsListAdapter = new IngredientsListAdapter(new ArrayList<Ingredient>());
         mIngredientsListAdapter.setCallbacks(this);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        ingredientsRv.setLayoutManager(linearLayoutManager);
         ingredientsRv.setAdapter(mIngredientsListAdapter);
 
         showLoadingIndicator();
