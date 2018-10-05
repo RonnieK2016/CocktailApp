@@ -9,10 +9,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,11 +24,13 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
+import com.example.android.cocktailsapp.adapters.IngredientsListAdapter;
 import com.example.android.cocktailsapp.dao.CocktailsAccessFactory;
 import com.example.android.cocktailsapp.dao.CocktailsAccessService;
 import com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsDbContract;
 import com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsDbContract.CocktailRecord;
 import com.example.android.cocktailsapp.domain.Cocktail;
+import com.example.android.cocktailsapp.domain.Ingredient;
 import com.example.android.cocktailsapp.listeners.FavouriteChangedEvent;
 import com.example.android.cocktailsapp.listeners.HttpResponseListener;
 import com.example.android.cocktailsapp.listeners.CocktailAdapterCallback;
@@ -37,11 +43,13 @@ import com.squareup.picasso.Picasso;
 import org.apache.commons.collections4.CollectionUtils;
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CocktailDetailActivity extends AppCompatActivity implements CocktailAdapterCallback<Cocktail>,
+public class CocktailDetailActivity extends AppCompatActivity implements CocktailAdapterCallback<Ingredient>,
         HttpResponseListener<CocktailDbHttpResponse<Cocktail>>{
 
     public static final String SAVED_COCKTAIL_TAG = "SAVED_COCKTAIL_TAG";
@@ -49,8 +57,8 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     TextView movieTitle;
     @BindView(R.id.cocktail_image_details)
     ImageView cocktailImageBig;
-    @BindView(R.id.ingredients)
-    TextView ingredients;
+    @BindView(R.id.ingredients_list)
+    RecyclerView ingredientsRv;
     @BindView(R.id.instructions)
     TextView instructions;
     @BindView(R.id.pb_loading_indicator_details)
@@ -64,6 +72,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     private Cocktail cocktail;
     @BindView(R.id.like_button)
     FloatingActionButton mLikeButton;
+    private IngredientsListAdapter mIngredientsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +81,10 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
         ButterKnife.bind(this);
         cocktail = readCocktailFromIntent();
         cocktailsAccessService = CocktailsAccessFactory.getCocktailsService(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false);
+
+        mIngredientsListAdapter = new IngredientsListAdapter(new ArrayList<Ingredient>());
+        mIngredientsListAdapter.setCallbacks(this);
+        ingredientsRv.setAdapter(mIngredientsListAdapter);
 
         showLoadingIndicator();
 
@@ -111,10 +122,10 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
                 .load(cocktail.getImageUrl())
                 .into(cocktailImageBig);
         instructions.setText(cocktail.getInstructions());
-        /*
-        instructions.setText(cocktail.getOverview());
-        cocktailImageBig.setContentDescription(cocktail.getCocktailName());
-                */
+
+        mIngredientsListAdapter.addIngredients(cocktail.getIngredients());
+        mIngredientsListAdapter.notifyDataSetChanged();
+
     }
 
     private Cocktail readCocktailFromIntent() {
@@ -142,8 +153,10 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     }
 
     @Override
-    public void onClick(Cocktail item) {
-
+    public void onClick(Ingredient item) {
+        Intent intent = new Intent(this, SearchCocktailActivity.class);
+        intent.putExtra(Constants.COCKTAIL_INGREDIENT_INTENT_TAG, item.getIngredientName());
+        startActivity(intent);
     }
 
     private void loadCocktail(final int cocktailId) {

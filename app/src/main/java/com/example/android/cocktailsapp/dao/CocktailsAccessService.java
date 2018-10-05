@@ -1,7 +1,6 @@
 package com.example.android.cocktailsapp.dao;
 
 import com.example.android.cocktailsapp.domain.Cocktail;
-import com.example.android.cocktailsapp.domain.Review;
 import com.example.android.cocktailsapp.listeners.HttpResponseListener;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 

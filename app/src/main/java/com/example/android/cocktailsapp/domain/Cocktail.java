@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.example.android.cocktailsapp.JsonConstants;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,10 +40,7 @@ public class Cocktail implements Parcelable {
     private String instructions;
     @Getter
     @Setter
-    private String[] ingredients;
-    @Getter
-    @Setter
-    private String[] measurements;
+    private List<Ingredient> ingredients;
 
 
     public static final Creator CREATOR = new Creator() {
@@ -56,7 +56,7 @@ public class Cocktail implements Parcelable {
     };
 
     public Cocktail(int id, int databaseId, String cocktailName, String category, String alcoholic,
-                    String imageUrl, String instructions, String[] ingredients, String[] measurements){
+                    String imageUrl, String instructions, List<Ingredient> ingredients){
         this.id = id;
         this.databaseId = databaseId;
         this.cocktailName = cocktailName;
@@ -65,7 +65,6 @@ public class Cocktail implements Parcelable {
         this.imageUrl = imageUrl;
         this.instructions = instructions;
         this.ingredients = ingredients;
-        this.measurements = measurements;
     }
 
     private Cocktail(Parcel source) {
@@ -75,10 +74,8 @@ public class Cocktail implements Parcelable {
         alcoholic = source.readString();
         imageUrl = source.readString();
         instructions = source.readString();
-        ingredients = new String[15];
-        source.readStringArray(ingredients);
-        measurements = new String[15];
-        source.readStringArray(measurements);
+        ingredients = new ArrayList<>();
+        source.readTypedList(ingredients, Ingredient.CREATOR);
     }
 
     @Override
@@ -94,8 +91,7 @@ public class Cocktail implements Parcelable {
         dest.writeString(alcoholic);
         dest.writeString(imageUrl);
         dest.writeString(instructions);
-        dest.writeStringArray(ingredients);
-        dest.writeStringArray(measurements);
+        dest.writeTypedList(ingredients);
     }
 
     public boolean isFavourite() {

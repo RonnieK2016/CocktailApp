@@ -3,19 +3,24 @@ package com.example.android.cocktailsapp.utils;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsDbContract.CocktailRecord;
 import com.example.android.cocktailsapp.domain.Cocktail;
+import com.example.android.cocktailsapp.domain.Ingredient;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by angelov on 6/26/2018.
  */
 
 public final class ConverterUtils {
-
-    private static final String ARRAY_ITEM_SEPARATOR = ";";
 
     public static ContentValues cocktailToContentValues(Cocktail cocktail) {
         ContentValues values = new ContentValues();
@@ -26,8 +31,7 @@ public final class ConverterUtils {
         values.put(CocktailRecord.ALCOHOLIC, cocktail.getAlcoholic());
         values.put(CocktailRecord.COCKTAIL_IMAGE_URL, cocktail.getImageUrl());
         values.put(CocktailRecord.INSTRUCTIONS, cocktail.getInstructions());
-        values.put(CocktailRecord.INGREDIENTS, arrayOfStringsToString(cocktail.getIngredients()));
-        values.put(CocktailRecord.MEASUREMENTS, arrayOfStringsToString(cocktail.getMeasurements()));
+        values.put(CocktailRecord.INGREDIENTS, listToJsonString(cocktail.getIngredients()));
         return values;
     }
 
@@ -40,31 +44,23 @@ public final class ConverterUtils {
         String alcoholic = cursor.getString(cursor.getColumnIndex(CocktailRecord.ALCOHOLIC));
         String imageUrl = cursor.getString(cursor.getColumnIndex(CocktailRecord.COCKTAIL_IMAGE_URL));
         String instructions = cursor.getString(cursor.getColumnIndex(CocktailRecord.INSTRUCTIONS));
-        String[] ingredients = stringToArrayOfString(cursor.getString(cursor.getColumnIndex(CocktailRecord.INGREDIENTS)));
-        String[] measurements = stringToArrayOfString(cursor.getString(cursor.getColumnIndex(CocktailRecord.MEASUREMENTS)));
+        List<Ingredient> ingredients = jsonStringToList(cursor.getString(cursor.getColumnIndex(CocktailRecord.INGREDIENTS)));
 
-        return new Cocktail(remoteDbId, localDbId, cocktailName, category, alcoholic, imageUrl, instructions, ingredients, measurements);
+        return new Cocktail(remoteDbId, localDbId, cocktailName, category, alcoholic, imageUrl, instructions, ingredients);
     }
 
-    private static String arrayOfStringsToString(String[] inputArray) {
-        StringBuilder result = new StringBuilder();
-        if(!ArrayUtils.isEmpty(inputArray)) {
-            for(int i = 0; i < inputArray.length; i++) {
-                result.append(inputArray[i]);
-                if(i < (inputArray.length - 1)) {
-                    result.append(ARRAY_ITEM_SEPARATOR);
-                }
-            }
-        }
-        return result.toString();
+    private static String listToJsonString(List<Ingredient> ingredients) {
+        Gson gson = new Gson();
+        return gson.toJson(ingredients);
     }
 
-    private static String[] stringToArrayOfString(String inputString) {
+    private static List<Ingredient> jsonStringToList(String inputString) {
         if(StringUtils.isEmpty(inputString)) {
             return null;
         }
-
-        return inputString.split(ARRAY_ITEM_SEPARATOR, -1);
+        Gson gson = new Gson();
+        TypeToken<ArrayList<Ingredient>> typeToken = new TypeToken<ArrayList<Ingredient>>(){};
+        return gson.fromJson(inputString, typeToken.getType());
     }
 
 

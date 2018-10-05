@@ -24,8 +24,7 @@ public class FavouriteCocktailsDbContract {
             CocktailRecord.CATEGORY,
             CocktailRecord.ALCOHOLIC,
             CocktailRecord.INSTRUCTIONS,
-            CocktailRecord.INGREDIENTS,
-            CocktailRecord.MEASUREMENTS
+            CocktailRecord.INGREDIENTS
     };
 
     public static final class CocktailRecord implements BaseColumns {
@@ -42,7 +41,6 @@ public class FavouriteCocktailsDbContract {
         public static final String ALCOHOLIC = "ALCOHOLIC";
         public static final String INSTRUCTIONS = "INSTRUCTIONS";
         public static final String INGREDIENTS = "INGREDIENTS";
-        public static final String MEASUREMENTS = "MEASUREMENTS";
 
         // create content uri
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(FAVOURITE_COCKTAILS_TABLE_NAME).build();

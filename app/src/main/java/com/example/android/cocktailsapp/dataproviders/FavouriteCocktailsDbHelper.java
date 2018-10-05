@@ -31,8 +31,7 @@ public class FavouriteCocktailsDbHelper extends SQLiteOpenHelper {
                 CocktailRecord.CATEGORY + " TEXT, " +
                 CocktailRecord.ALCOHOLIC + " TEXT, " +
                 CocktailRecord.INGREDIENTS + " TEXT, " +
-                CocktailRecord.INSTRUCTIONS + " TEXT, " +
-                CocktailRecord.MEASUREMENTS + " TEXT);";
+                CocktailRecord.INSTRUCTIONS + " TEXT);";
 
         db.execSQL(CREATE_TABLE);
 
