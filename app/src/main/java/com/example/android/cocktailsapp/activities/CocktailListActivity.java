@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.example.android.cocktailsapp.AnalyticsApplication;
 import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
 import com.example.android.cocktailsapp.adapters.CocktailsAdapter;
@@ -40,6 +41,8 @@ import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -80,12 +83,17 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     private static final String COCKTAIL_SCROLL_LISTENER_TOTAL_TAG = "COCKTAIL_SCROLL_LISTENER_TOTAL_TAG";
     private CocktailsRecyclerViewScrollListener onScrollListener;
     public static final int FAVOURITE_COCKTAILS_LOADER_ID = 0;
+    private AnalyticsApplication application;
+    private Tracker mTracker;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
+
+        application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         int columnsNumber = NUMBER_OF_COLUMNS;
         if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -132,6 +140,14 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
         else {
             loadCocktails(mSelectedSort, 1);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mTracker.setScreenName("CocktailList");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private void initAdapter() {
@@ -226,6 +242,12 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         if(!item.isChecked()) {
             totalPages = 1;
+
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("Cocktail Filter Selected: ")
+                    .setLabel(item.getTitle().toString())
+                    .build());
 
             item.setChecked(true);
             sortOptionChanged = true;

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.example.android.cocktailsapp.AnalyticsApplication;
 import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
 import com.example.android.cocktailsapp.adapters.IngredientsListAdapter;
@@ -39,6 +40,8 @@ import com.example.android.cocktailsapp.utils.ConverterUtils;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
 import com.example.android.cocktailsapp.widget.CocktailWidgetService;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -74,12 +77,17 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     @BindView(R.id.like_button)
     FloatingActionButton mLikeButton;
     private IngredientsListAdapter mIngredientsListAdapter;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cocktail_details);
         ButterKnife.bind(this);
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
         cocktail = readCocktailFromIntent();
         cocktailsAccessService = CocktailsAccessFactory.getCocktailsService(this);
 
@@ -145,6 +153,14 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
             return cocktail;
         }
         return null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mTracker.setScreenName(cocktail.getCocktailName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private void showLoadingIndicator(){

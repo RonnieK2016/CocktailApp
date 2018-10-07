@@ -1,6 +1,7 @@
 package com.example.android.cocktailsapp.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.example.android.cocktailsapp.AnalyticsApplication;
 import com.example.android.cocktailsapp.Constants;
 import com.example.android.cocktailsapp.R;
 import com.example.android.cocktailsapp.adapters.CocktailsAdapter;
@@ -25,6 +27,8 @@ import com.example.android.cocktailsapp.listeners.HttpResponseListener;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,14 +57,25 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
     private String ingredient;
     private static final String TAG = SearchCocktailActivity.class.getSimpleName();
     private static final int NUMBER_OF_COLUMNS = 2;
+    private static final int NUMBER_OF_COLUMNS_LANDSCAPE = 3;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
         setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+
+        int columnsNumber = NUMBER_OF_COLUMNS;
+        if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            columnsNumber = NUMBER_OF_COLUMNS_LANDSCAPE;
+        }
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnsNumber);
         mCocktailsListRv.setLayoutManager(gridLayoutManager);
         readIngredientFromIntent();
         initAdapter();
@@ -91,6 +106,14 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
             }
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mTracker.setScreenName("Search Results: " + ingredient);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private void showLoadingIndicator(){
