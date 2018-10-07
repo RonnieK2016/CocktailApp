@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        ReleaseSign {
+            keyAlias 'CocktailApp'
+            keyPassword '123456'
+            storeFile file('./cocktailapp.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 27
     buildToolsVersion "26.0.3"
     defaultConfig {
@@ -13,7 +21,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "COCKTAILS_DB_API_KEY", '"1"'
         multiDexEnabled true
-        javaCompileOptions{
+        javaCompileOptions {
             annotationProcessorOptions.includeCompileClasspath = true
         }
     }
@@ -21,6 +29,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.ReleaseSign
         }
     }
     configurations.all {
@@ -29,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
@@ -42,7 +51,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    compileOnly "org.projectlombok:lombok:1.16.20"
+    compileOnly 'org.projectlombok:lombok:1.16.20'
     compile 'com.android.support:design:27.1.1'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'org.greenrobot:eventbus:3.1.1'
