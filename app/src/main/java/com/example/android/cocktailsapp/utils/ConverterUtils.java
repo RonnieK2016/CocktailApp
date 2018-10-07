@@ -1,8 +1,11 @@
 package com.example.android.cocktailsapp.utils;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
+import com.example.android.cocktailsapp.R;
 import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.dataproviders.FavouriteCocktailsDbContract.CocktailRecord;
 import com.example.android.cocktailsapp.domain.Cocktail;
@@ -10,6 +13,7 @@ import com.example.android.cocktailsapp.domain.Ingredient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,6 +67,16 @@ public final class ConverterUtils {
         return gson.fromJson(inputString, typeToken.getType());
     }
 
-
-
+    public static String cocktailToString(@NonNull Cocktail cocktail, Context context) {
+        StringBuilder result = new StringBuilder();
+        result.append(context.getResources().getString(R.string.cocktail_share_instructions_string)).append("\r\n")
+                .append(cocktail.getInstructions()).append("\r\n").append("\r\n");
+        if(!CollectionUtils.isEmpty(cocktail.getIngredients())) {
+            result.append(context.getResources().getString(R.string.cocktail_share_ingredients_string)).append("\r\n");
+            for(Ingredient ingredient : cocktail.getIngredients()) {
+                result.append(ingredient.getIngredientName()).append(" - ").append(ingredient.getMeasurement()).append("\r\n");
+            }
+        }
+        return  result.toString();
+    }
 }

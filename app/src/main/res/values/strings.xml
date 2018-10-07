@@ -26,4 +26,6 @@
     <!--this is test id from https://developers.google.com/admob/android/test-ads-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="share_cocktail_via">Share cocktail via</string>
+    <string name="cocktail_share_ingredients_string">Ingredients:</string>
+    <string name="cocktail_share_instructions_string">Instructions:</string>
 </resources>

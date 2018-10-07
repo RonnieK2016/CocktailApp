@@ -259,9 +259,8 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     public void shareButtonClicked(View v) {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        String shareBody = "Here is the share content body";
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, cocktail.getCocktailName());
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, ConverterUtils.cocktailToString(cocktail, this));
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_cocktail_via)));
     }
 }
