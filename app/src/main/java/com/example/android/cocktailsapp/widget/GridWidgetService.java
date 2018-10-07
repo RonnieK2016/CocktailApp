@@ -130,7 +130,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         extras.putParcelable(Constants.COCKTAIL_DETAIL_INTENT_TAG, selectedCocktail);
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
-        //views.setOnClickFillInIntent(R.id.cocktail_widget_image, fillInIntent);
+        views.setOnClickFillInIntent(R.id.cocktail_widget_image, fillInIntent);
 
         return views;
 

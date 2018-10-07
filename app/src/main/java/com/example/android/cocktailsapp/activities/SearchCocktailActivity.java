@@ -3,6 +3,7 @@ package com.example.android.cocktailsapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -82,6 +83,13 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
         Intent intent = getIntent();
         if(intent != null && intent.hasExtra(Constants.COCKTAIL_INGREDIENT_INTENT_TAG)) {
             ingredient = intent.getExtras().getString(Constants.COCKTAIL_INGREDIENT_INTENT_TAG);
+
+            ActionBar toolbar = getSupportActionBar();
+            if (toolbar != null) {
+                toolbar.setTitle("Search Results: " + ingredient);
+                toolbar.setDisplayHomeAsUpEnabled(true);
+            }
+
         }
     }
 
