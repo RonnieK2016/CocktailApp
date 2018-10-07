@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,6 +70,8 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     public RelativeLayout mMainLayout;
     @BindView(R.id.adView)
     public AdView mAdView;
+    @BindView(R.id.main_app_toolbar)
+    public Toolbar mTopToolbar;
     private static final int NUMBER_OF_COLUMNS = 2;
     private static final int NUMBER_OF_COLUMNS_LANDSCAPE = 3;
     private static final String TAG = CocktailListActivity.class.getSimpleName();
@@ -117,6 +120,7 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
         initAdapter();
 
         cocktailsAccessService = CocktailsAccessFactory.getCocktailsService(this);
+        setSupportActionBar(mTopToolbar);
     }
 
     @Override

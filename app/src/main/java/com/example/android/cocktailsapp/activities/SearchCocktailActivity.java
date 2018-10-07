@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,13 +47,17 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
 
     private CocktailsAdapter mCocktailsAdapter;
     @BindView(R.id.rv_cocktails)
-    public RecyclerView mCocktailsListRv;
+    RecyclerView mCocktailsListRv;
     @BindView(R.id.no_favourite_cocktails)
     TextView mNoFavouriteCocktailsTextView;
     @BindView(R.id.pb_loading_indicator)
-    public ProgressBar mLoadingIndicator;
+    ProgressBar mLoadingIndicator;
     @BindView(R.id.activity_cocktails_list)
-    public RelativeLayout mMainLayout;
+    RelativeLayout mMainLayout;
+    @BindView(R.id.main_app_toolbar)
+    Toolbar mToolBar;
+    @BindView(R.id.app_bar_title)
+    TextView mToolBarTitle;
     private CocktailsAccessService cocktailsAccessService;
     private String ingredient;
     private static final String TAG = SearchCocktailActivity.class.getSimpleName();
@@ -69,6 +74,11 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
 
         setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
+
+        setSupportActionBar(mToolBar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled (true);
 
         int columnsNumber = NUMBER_OF_COLUMNS;
         if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -98,13 +108,7 @@ public class SearchCocktailActivity extends AppCompatActivity implements HttpRes
         Intent intent = getIntent();
         if(intent != null && intent.hasExtra(Constants.COCKTAIL_INGREDIENT_INTENT_TAG)) {
             ingredient = intent.getExtras().getString(Constants.COCKTAIL_INGREDIENT_INTENT_TAG);
-
-            ActionBar toolbar = getSupportActionBar();
-            if (toolbar != null) {
-                toolbar.setTitle("Search Results: " + ingredient);
-                toolbar.setDisplayHomeAsUpEnabled(true);
-            }
-
+            mToolBarTitle.setText(getResources().getString(R.string.search_results) + ingredient);
         }
     }
 

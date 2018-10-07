@@ -14,6 +14,4 @@ public interface JsonConstants {
     String COCKTAILS_SERVICE_JSON_IMAGE_URL_FIELD = "strDrinkThumb";
     String COCKTAILS_SERVICE_JSON_INGREDIENT_FIELD = "strIngredient";
     String COCKTAILS_SERVICE_JSON_MEASUREMENT_FIELD = "strMeasure";
-    String MOVIE_SERVICE_JSON_ISO_639_1 = "iso_639_1";
-    String MOVIE_SERVICE_JSON_ISO_3166_1 = "iso_3166_1";
 }

@@ -22,6 +22,7 @@
     <string name="ingredient_measurement">Ingredient Measurement</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="search_results">Search results:</string>
     <!--this is test id from https://developers.google.com/admob/android/test-ads-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

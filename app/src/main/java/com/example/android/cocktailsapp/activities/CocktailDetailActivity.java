@@ -10,13 +10,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +56,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
 
     public static final String SAVED_COCKTAIL_TAG = "SAVED_COCKTAIL_TAG";
     @BindView(R.id.cocktail_name)
-    TextView movieTitle;
+    TextView cocktailNameTextView;
     @BindView(R.id.cocktail_image_details)
     ImageView cocktailImageBig;
     @BindView(R.id.ingredients_list)
@@ -67,10 +65,14 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     TextView instructions;
     @BindView(R.id.pb_loading_indicator_details)
     ProgressBar mLoadingIndicator;
-    @BindView(R.id.main_movie_detail_layout)
-    LinearLayout mMainMovieDetailLayout;
+    @BindView(R.id.main_cocktail_detail_layout)
+    LinearLayout mMainCocktailDetailLayout;
     @BindView(R.id.main_content_layout)
     LinearLayout mMainContentLayout;
+    @BindView(R.id.main_app_toolbar)
+    Toolbar mToolBar;
+    @BindView(R.id.app_bar_title)
+    TextView mToolBarTitle;
     private static final String TAG = CocktailListActivity.class.getSimpleName();
     private CocktailsAccessService cocktailsAccessService;
     private Cocktail cocktail;
@@ -97,6 +99,11 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         ingredientsRv.setLayoutManager(linearLayoutManager);
         ingredientsRv.setAdapter(mIngredientsListAdapter);
+
+        setSupportActionBar(mToolBar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled (true);
 
         showLoadingIndicator();
 
@@ -129,7 +136,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
     private void populateDataToViews(Cocktail cocktail) {
         hideLoadingIndicator();
 
-        movieTitle.setText(cocktail.getCocktailName());
+        cocktailNameTextView.setText(cocktail.getCocktailName());
         Picasso.with(this)
                 .load(cocktail.getImageUrl())
                 .placeholder(R.drawable.ic_cocktail_placeholder)
@@ -145,11 +152,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
         Intent intent = getIntent();
         if(intent != null && intent.hasExtra(Constants.COCKTAIL_DETAIL_INTENT_TAG)) {
             Cocktail cocktail = intent.getExtras().getParcelable(Constants.COCKTAIL_DETAIL_INTENT_TAG);
-            ActionBar toolbar = getSupportActionBar();
-            if (toolbar != null) {
-                toolbar.setTitle(cocktail.getCocktailName());
-                toolbar.setDisplayHomeAsUpEnabled(true);
-            }
+            mToolBarTitle.setText(cocktail.getCocktailName());
             return cocktail;
         }
         return null;
@@ -185,7 +188,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
             cocktailsAccessService.loadCocktailDetails(this, cocktailId,0);
         } else {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            ViewUtils.showNoInternetConnectionSnackBar(mMainMovieDetailLayout, new View.OnClickListener() {
+            ViewUtils.showNoInternetConnectionSnackBar(mMainCocktailDetailLayout, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     loadCocktail(cocktailId);
