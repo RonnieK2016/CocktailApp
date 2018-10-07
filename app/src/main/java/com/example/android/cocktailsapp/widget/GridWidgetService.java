@@ -119,6 +119,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             else {
                 views.setImageViewResource(R.id.cocktail_widget_image, R.drawable.ic_cocktail_placeholder);
             }
+            views.setContentDescription(R.id.cocktail_widget_image, selectedCocktail.getCocktailName());
         } catch (IOException e) {
             views.setImageViewResource(R.id.cocktail_widget_image, R.drawable.ic_cocktail_placeholder);
             e.printStackTrace();

@@ -52,6 +52,8 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .placeholder(R.drawable.ic_cocktail_placeholder)
                     .into(cocktailViewHolder.cocktailImage);
 
+            cocktailViewHolder.cocktailImage.setContentDescription(selectedCocktail.getCocktailName());
+
             cocktailViewHolder.cocktailName.setText(selectedCocktail.getCocktailName());
 
             cocktailViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -11,6 +11,7 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:paddingTop="@dimen/cocktail_details_padding_top"
         xmlns:tools="http://schemas.android.com/tools">
 
         <LinearLayout
@@ -19,15 +20,6 @@
             android:background="@android:color/white"
             android:id="@+id/main_cocktail_detail_layout"
             android:orientation="vertical">
-
-            <ProgressBar
-                android:id="@+id/pb_loading_indicator_details"
-                android:layout_height="42dp"
-                android:layout_width="42dp"
-                android:layout_gravity="center"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,12 +66,15 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/cocktail_name"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:paddingStart="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="@dimen/cocktail_details_name_margins"
+                        android:layout_marginBottom="@dimen/cocktail_details_name_margins"
+                        android:paddingStart="@dimen/cocktail_details_name_paddings"
+                        android:paddingEnd="@dimen/cocktail_details_name_paddings"
+                        android:paddingLeft="@dimen/cocktail_details_name_paddings"
+                        android:paddingRight="@dimen/cocktail_details_name_paddings"
                         android:gravity="start"
                         tools:text="@string/cocktail_name"
-                        android:textSize="20sp"
+                        android:textSize="@dimen/cocktail_details_name_text_size"
                         android:textColor="@color/primaryText"/>
                 </LinearLayout>
 
@@ -203,6 +198,15 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator_details"
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
