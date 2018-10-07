@@ -8,6 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/ingredient_name"
+        android:textSize="@dimen/detail_main_text_size"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/ingredient_name"/>
 
     <TextView
@@ -16,6 +18,7 @@
         android:id="@+id/ingredient_measurement"
         android:contentDescription="@string/ingredient_measurement"
         app:layout_constraintLeft_toRightOf="@+id/ingredient_name"
+        android:textSize="@dimen/detail_main_text_size"
         android:paddingStart="10dp"
         android:paddingLeft="10dp"
         />

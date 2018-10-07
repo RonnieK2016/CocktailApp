@@ -1,6 +1,7 @@
 package com.example.android.cocktailsapp.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -37,6 +38,8 @@ import com.example.android.cocktailsapp.cocktailsdb.CocktailDbHttpResponse;
 import com.example.android.cocktailsapp.utils.ConverterUtils;
 import com.example.android.cocktailsapp.utils.NetworkUtils;
 import com.example.android.cocktailsapp.utils.ViewUtils;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +64,10 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     public ProgressBar mLoadingIndicator;
     @BindView(R.id.activity_cocktails_list)
     public RelativeLayout mMainLayout;
+    @BindView(R.id.adView)
+    public AdView mAdView;
     private static final int NUMBER_OF_COLUMNS = 2;
+    private static final int NUMBER_OF_COLUMNS_LANDSCAPE = 3;
     private static final String TAG = CocktailListActivity.class.getSimpleName();
     private CocktailsAccessService cocktailsAccessService;
     private SortOptions mSelectedSort = SortOptions.ALCOHOLIC;
@@ -80,7 +86,13 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cocktails_list);
         ButterKnife.bind(this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+
+        int columnsNumber = NUMBER_OF_COLUMNS;
+        if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            columnsNumber = NUMBER_OF_COLUMNS_LANDSCAPE;
+        }
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, columnsNumber);
         mCocktailsListRv.setLayoutManager(gridLayoutManager);
 
         onScrollListener = new CocktailsRecyclerViewScrollListener(gridLayoutManager){
@@ -102,6 +114,11 @@ public class CocktailListActivity extends AppCompatActivity implements HttpRespo
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
 
         if(savedInstanceState != null) {
             mSelectedSort = (SortOptions) savedInstanceState.getSerializable(SEARCH_TAG);
