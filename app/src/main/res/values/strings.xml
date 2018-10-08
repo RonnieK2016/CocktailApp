@@ -28,4 +28,5 @@
     <string name="share_cocktail_via">Share cocktail via</string>
     <string name="cocktail_share_ingredients_string">Ingredients:</string>
     <string name="cocktail_share_instructions_string">Instructions:</string>
+    <string name="add_to_favorites_action_button">Add to Favorites Action Button</string>
 </resources>

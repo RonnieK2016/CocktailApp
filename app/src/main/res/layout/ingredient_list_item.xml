@@ -20,8 +20,6 @@
         app:layout_constraintLeft_toRightOf="@+id/ingredient_name"
         android:textSize="@dimen/detail_main_text_size"
         android:paddingStart="@dimen/ingredient_list_paddings"
-        android:paddingLeft="@dimen/ingredient_list_paddings"
-        android:paddingRight="@dimen/ingredient_list_paddings"
         android:paddingEnd="@dimen/ingredient_list_paddings"
         />
 

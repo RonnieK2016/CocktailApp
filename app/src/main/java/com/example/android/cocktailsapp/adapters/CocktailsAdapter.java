@@ -50,6 +50,7 @@ public class CocktailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Picasso.with(mContext)
                     .load(selectedCocktail.getImageUrl())
                     .placeholder(R.drawable.ic_cocktail_placeholder)
+                    .error(R.drawable.ic_cocktail_placeholder)
                     .into(cocktailViewHolder.cocktailImage);
 
             cocktailViewHolder.cocktailImage.setContentDescription(selectedCocktail.getCocktailName());

@@ -140,6 +140,7 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
         Picasso.with(this)
                 .load(cocktail.getImageUrl())
                 .placeholder(R.drawable.ic_cocktail_placeholder)
+                .error(R.drawable.ic_cocktail_placeholder)
                 .into(cocktailImageBig);
 
         cocktailImageBig.setContentDescription(cocktail.getCocktailName());
@@ -262,5 +263,11 @@ public class CocktailDetailActivity extends AppCompatActivity implements Cocktai
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, cocktail.getCocktailName());
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, ConverterUtils.cocktailToString(cocktail, this));
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_cocktail_via)));
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Shared Cocktail")
+                .setLabel(cocktail.getCocktailName())
+                .build());
     }
 }
